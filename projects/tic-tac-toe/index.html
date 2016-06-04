@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Tic Tac Toe</title>
+    <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
+    <link rel="stylesheet" href="app.css">
+  </head>
+
+  <body>
+
+    <div class="container">
+  
+    <div class="modal fade player-select" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Player Select</h4>
+          </div>
+          <h1>
+            <i id="playerX" class="fa fa-times fa-5x" aria-hidden="true"></i>
+            <i id="playerO" class="fa fa-circle-o fa-4x" aria-hidden="true"></i>
+          </h1>
+          
+        </div>
+      </div>
+    </div>
+  
+  <div class="row">
+    <div class="col-xs-12 col-sm-8">
+      <div class="board">
+        <table>
+          <tr>
+            <td id="0"></td>
+            <td id="1" class="middle"></td>
+            <td id="2"></td>
+          </tr>
+          <tr class="middle">
+            <td id="3"></td>
+            <td id="4" class="middle"></td>
+            <td id="5"></td>
+          </tr>
+          <tr>
+            <td id="6"></td>
+            <td id="7" class="middle"></td>
+            <td id="8"></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-4">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".player-select">Player Select</button>
+      <p>Stats</p>
+    </div>
+  </div>
+</div>
+    <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
+<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'></script>
+<script src='https://use.fontawesome.com/d946983e1b.js'></script>
+<script src="ttt.js"></script>
+<script src="app.js"></script>
+
+    
+    
+    
+  </body>
+</html>
