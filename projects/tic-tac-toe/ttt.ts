@@ -15,7 +15,7 @@ class TTTBot {
   public winner: string;
   public player: string;
   protected opponent: string;
-  protected combos: number[][];
+  public combos: number[][];
   protected corners: number[];
   protected sides: number[];
   
@@ -162,9 +162,12 @@ class TTTBot {
   
   playCenter(board: string[]): number | boolean {
     // How many plays are open to us?
-    let plays: number = board.reduce(function (prev, current) {
-      if (current === undefined) return prev++;
-    }, 0);
+    let plays: number = 0;
+    for (let i = 0; i < 9; i++) {
+      if (board[i] === undefined) {
+        plays++;
+      }
+    }
     // If there are 9 open spaces, this is the first move. Let's take a random corner
     if (plays === 9) {
       let moves = [0, 2, 6, 8];

@@ -142,10 +142,12 @@ var TTTBot = (function () {
     };
     TTTBot.prototype.playCenter = function (board) {
         // How many plays are open to us?
-        var plays = board.reduce(function (prev, current) {
-            if (current === undefined)
-                return prev++;
-        }, 0);
+        var plays = 0;
+        for (var i = 0; i < 9; i++) {
+            if (board[i] === undefined) {
+                plays++;
+            }
+        }
         // If there are 9 open spaces, this is the first move. Let's take a random corner
         if (plays === 9) {
             var moves = [0, 2, 6, 8];
