@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>Local Weather App</title>
+    
+    
+    
+    <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'>
+<link rel='stylesheet prefetch' href='https://dl.dropboxusercontent.com/u/13022985/weather-font/css/weather-icons.min.css'>
+
+    
+    
+    
+    
+  </head>
+
+  <body>
+
+    <div class="container">
+  <div class="row">
+    <div class="col-xs-12 text-center">
+      <h1 id="pageTitle">Local Weather</h1>
+    </div>
+  </div>
+  <div class="row text-center">
+    <div class="col-xs-12">
+      <h1>
+        <i id="weather-icon" class="wi"></i>
+        <br>
+        <span id="description"></span>
+      </h1>
+      <div class="btn-group">
+        <button type="button" id="temperature" class="btn btn-lg btn-primary"></button>
+        <button type="button" class="btn btn-lg btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="caret"></span>
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="#" id="getTempF">Fahrenheit</a></li>
+          <li><a href="#" id="getTempC">Celcius</a></li>
+          <li><a href="#" id="getTempK">Kelvin</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js'></script>
+
+        <script src="js/index.js"></script>
+
+    
+    
+    
+  </body>
+</html>
