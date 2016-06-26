@@ -96,6 +96,10 @@ class SimonGame {
         return this.buttons[Math.floor(Math.random() * this.buttons.length)];
     }
 
+    setStrict(strict: boolean) {
+        this.strict = strict;
+    }
+
     addToSequence() {
         this.sequence.push(this.buttons.indexOf(this.getRandomButton()));
     }
