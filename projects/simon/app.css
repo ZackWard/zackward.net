@@ -1,0 +1,50 @@
+#main {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#main div {
+    display: inline-block; 
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    border-radius: 4px;
+}
+
+#main #settings {
+    width: 100%;
+    text-align: center;
+}
+
+#red {
+    background-color: darkred;
+}
+
+#red.on {
+    background-color: red;
+}
+
+#green {
+    background-color: darkgreen;
+}
+
+#green.on {
+    background-color: green;
+}
+
+#blue {
+    background-color: darkblue;
+}
+
+#blue.on {
+    background-color: blue;
+}
+
+#yellow {
+    background-color: #B3B300
+}
+#yellow.on {
+    background-color: yellow;
+}
