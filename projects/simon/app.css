@@ -1,0 +1,77 @@
+#main {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 100vh;
+    transform: translate(-50%, -50%);
+    border-radius: 100%;
+    box-shadow: 10px, 10px;
+}
+
+.simon-row {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.simon-btn {
+    box-sizing: border-box; 
+    width: 50vw;
+    height: 50vh;
+    cursor: pointer;
+}
+
+#red {
+    background-color: darkred;
+    border-left: 1px solid black;
+}
+
+#red.on {
+    background-color: red;
+}
+
+#green {
+    background-color: darkgreen;
+}
+
+#green.on {
+    background-color: green;
+}
+
+#blue {
+    background-color: darkblue;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+}
+
+#blue.on {
+    background-color: blue;
+}
+
+#yellow {
+    background-color: #B3B300;
+    border-top: 1px solid black;
+}
+
+#yellow.on {
+    background-color: yellow;
+}
+
+#simon-controls {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    box-shadow: 2px 2px 10px -1px black;
+    min-width: 150px;
+    width: 50vw;
+    max-width: 400px;
+    text-align: center;
+    font-size: 1.5em;
+}

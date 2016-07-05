@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, intial-scale=1">
+    <title>Simon Game</title>
+    <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
+    <link rel="stylesheet" href="app.css">
+  </head>
+
+  <body>
+
+    <!-- Main game board -->
+    <div id="main">
+      <div class="simon-row">
+        <div id="green" class="simon-btn"></div>
+        <div id="red" class="simon-btn"></div>
+      </div>
+      <div class="simon-row">
+        <div id="yellow" class="simon-btn"></div>
+        <div id="blue" class="simon-btn"></div>
+      </div>
+      <div id="simon-controls">
+        <h2>Simon<sup>&reg;</sup></h2>
+        <div class="checkbox">
+          <label for="onButton" class="control-label">
+            <input id="onButton" type="checkbox">Power
+          </label>
+        </div>
+        <div class="checkbox">
+          <label for="strictButton" class="control-label">
+            <input id="strictButton" type="checkbox" disabled> Strict Mode
+          </label>
+        </div>
+        <button class="btn btn-primary" id="startButton" disabled>Start</button>
+        <hr>
+        <h2 id="sequence-count">--</h2>
+        <hr>
+        <p id="simon-info">Built by <a href="http://www.zackward.net" target="_blank">Zack Ward</a>, hosted on <a href="https://github.com/ZackWard/zackward.github.io/tree/master/projects/simon" target="_blank"><i class="fa fa-github" aria-hidden="true"></i> GitHub</a>.</p>
+      </div>
+    </div>
+    <!-- End main game board -->
+      
+    <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
+    <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'></script>
+    <script src='https://use.fontawesome.com/d946983e1b.js'></script>
+    <script src="https://code.createjs.com/soundjs-0.6.2.min.js"></script>
+    <script src="simon.js"></script>
+    <script src="app.js"></script>  
+  </body>
+</html>
