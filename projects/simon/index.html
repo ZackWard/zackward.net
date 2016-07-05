@@ -9,62 +9,37 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-      <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Simon</a>
-        </div>
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="main-navbar">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="http://www.zackward.net">Home</a></li>
-            <li><a href="https://github.com/ZackWard/zackward.github.io/tree/master/projects/simon">Source <i class="fa fa-github" aria-hidden="true"></i></a></li>
-          </ul>
-        </div>
-      <!-- /.navbar-collapse -->
-      </div>
-    <!-- /.container -->
-    </nav>
 
     <!-- Main game board -->
     <div id="main">
-      <div id="red"></div>
-      <div id="green"></div>
-      <br>
-      <div id="blue"></div>
-      <div id="yellow"></div>
-      <br>
-      <div id="settings">
-        <a href="#" data-toggle="modal" data-target="#settingsModal"><i class="fa fa-cog" aria-hidden="true"></i> Settings</a>
+      <div class="simon-row">
+        <div id="green" class="simon-btn"></div>
+        <div id="red" class="simon-btn"></div>
+      </div>
+      <div class="simon-row">
+        <div id="yellow" class="simon-btn"></div>
+        <div id="blue" class="simon-btn"></div>
+      </div>
+      <div id="simon-controls">
+        <h2>Simon<sup>&reg;</sup></h2>
+        <div class="checkbox">
+          <label for="onButton" class="control-label">
+            <input id="onButton" type="checkbox">Power
+          </label>
+        </div>
+        <div class="checkbox">
+          <label for="strictButton" class="control-label">
+            <input id="strictButton" type="checkbox" disabled> Strict Mode
+          </label>
+        </div>
+        <button class="btn btn-primary" id="startButton" disabled>Start</button>
+        <hr>
+        <h2 id="sequence-count">--</h2>
+        <hr>
+        <span>Menu here</span>
       </div>
     </div>
     <!-- End main game board -->
-
-    <!-- Settings modal -->
-    <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">Simon Settings</h4>
-          </div>
-          <div class="modal-body">
-            <p>Change things here</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
       
     <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
     <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'></script>
