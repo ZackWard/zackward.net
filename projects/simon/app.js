@@ -20,10 +20,10 @@ function getButtonCallbacks (button) {
 
 $(document).ready(function () {
     // Load our sounds
-    createjs.Sound.registerSound("https://s3.amazonaws.com/freecodecamp/simonSound1.mp3", 'red');
-    createjs.Sound.registerSound("https://s3.amazonaws.com/freecodecamp/simonSound2.mp3", 'green');
-    createjs.Sound.registerSound("https://s3.amazonaws.com/freecodecamp/simonSound3.mp3", 'blue');
-    createjs.Sound.registerSound("https://s3.amazonaws.com/freecodecamp/simonSound4.mp3", 'yellow');
+    createjs.Sound.registerSound("https://dl.dropboxusercontent.com/u/13022985/simonSound1.mp3", 'red');
+    createjs.Sound.registerSound("https://dl.dropboxusercontent.com/u/13022985/simonSound2.mp3", 'green');
+    createjs.Sound.registerSound("https://dl.dropboxusercontent.com/u/13022985/simonSound3.mp3", 'blue');
+    createjs.Sound.registerSound("https://dl.dropboxusercontent.com/u/13022985/simonSound4.mp3", 'yellow');
 
     // All we should need to do is bind our DOM elements to our game object
     let gameElements = {
