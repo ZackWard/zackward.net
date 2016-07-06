@@ -1,0 +1,23 @@
+body {
+  font-family: Lato;
+  margin-top: 35px;
+  font-size: 2em;
+}
+
+.jumbotron {
+  padding-bottom: 0px;
+}
+
+#footer li {
+  display: inline;
+}
+
+#footer li a:hover {
+  text-decoration: none;
+}
+
+@media (max-width: 450px) {
+    body {
+      font-size: 14px;
+    }
+}

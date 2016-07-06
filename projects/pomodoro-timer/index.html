@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>freeCodeCamp Pomodoro Clock</title>
+    
+    
+    
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css'>
+<link rel='stylesheet prefetch' href='http://fonts.googleapis.com/icon?family=Material+Icons'>
+
+        <link rel="stylesheet" href="css/style.css">
+
+    
+    
+    
+  </head>
+
+  <body>
+
+    <div class="container">
+  <div class="row">
+    <div class="col s12">
+      <div class="card hoverable">
+        <div class="card-image waves-effect waves-block waves-light">
+          <img class="activator" src="https://dl.dropboxusercontent.com/u/13022985/tomato.jpg">
+        </div>
+        <div class="card-content center-align">
+          <span class="card-title activator grey-text text-darken-4">Pomodoro Timer<i class="material-icons right">more_vert</i></span>
+          <div class="pomodoro-timer center-align">
+            <h1>25:00</h1>
+          </div>
+          <div id="pomodoro-progress">
+            <img src="https://dl.dropboxusercontent.com/u/13022985/pomodoro.png">
+            <img src="https://dl.dropboxusercontent.com/u/13022985/pomodoro.png">
+            <img src="https://dl.dropboxusercontent.com/u/13022985/pomodoro.png">
+            <img src="https://dl.dropboxusercontent.com/u/13022985/pomodoro.png">
+            <p>You've completed 0 of 4 Pomodoros!</p>
+          </div>
+          <a id="start-stop" class="red darken-2 grey-text text-lighten-4 btn-flat">Start</a>
+          <a id="reset" class="red darken-2 grey-text text-lighten-4 btn-flat">Reset</a>
+          
+        </div>
+        <div class="card-reveal">
+          <span class="card-title grey-text text-darken-4">Settings<i class="small material-icons right">close</i></span>
+          <div class="input-field">
+            <input id="pomodoro_minutes" type="text" value="25">
+            <label for="pomodoro_minutes">Minutes per Pomodoro</label>
+          </div>
+          <div class="input-field">
+            <input id="break_minutes" type="text" value="5">
+            <label for="break_minutes">Minutes per Break</label>
+          </div>
+          <div class="input-field">
+            <input id="pomodoros" type="text" value="4">
+            <label for="pomodoros">Pomodoros per Session</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js'></script>
+<script src='https://code.createjs.com/soundjs-0.6.2.min.js'></script>
+
+        <script src="js/index.js"></script>
+
+    
+    
+    
+  </body>
+</html>
