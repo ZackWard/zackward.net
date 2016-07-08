@@ -1,22 +1,29 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
-var ts = require('gulp-typescript');
-var tsProject = ts.createProject('tsconfig.json');
+var babel = require('gulp-babel');
+var concat = require('gulp-concat');
 
-gulp.task('default', ['typescript', 'sass'], function () {
-    console.log("Default task");
-});
+var fileList = [
+   './src/components/MDPDisplay.jsx',
+   './src/components/MDPInput.jsx',
+   './src/components/MDPApp.jsx'
+];
 
-gulp.task("typescript", function () {
-    console.log("In task typescript");
-    tsProject.src()
-        .pipe(ts(tsProject))
-        .js.pipe(gulp.dest('./dist'));
+gulp.task('default', ['sass', 'babel'], function () {
 });
 
 gulp.task("sass", function () {
-    console.log("In task sass");
-    gulp.src('./src/*.scss')
+    gulp.src('./src/sass/*.scss')
         .pipe(sass())
+        .pipe(concat('all.css'))
+        .pipe(gulp.dest('./dist'));
+});
+
+gulp.task("babel", function () {
+    gulp.src(fileList)
+        .pipe(babel({
+            presets: ['react']
+        }))
+        .pipe(concat('all.js'))
         .pipe(gulp.dest('./dist'));
 });

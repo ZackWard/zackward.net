@@ -9,11 +9,16 @@
   "author": "Zack Ward",
   "license": "MIT",
   "devDependencies": {
+    "babel-cli": "^6.10.1",
+    "babel-preset-react": "^6.11.1",
     "gulp": "^3.9.1",
-    "gulp-sass": "^2.3.2",
-    "gulp-typescript": "^2.13.6"
+    "gulp-babel": "^6.1.2",
+    "gulp-concat": "^2.6.0",
+    "gulp-sass": "^2.3.2"
   },
-  "dependencies": {
-    "marked": "^0.3.5"
+  "babel": {
+    "presets": [
+      "react"
+    ]
   }
 }
