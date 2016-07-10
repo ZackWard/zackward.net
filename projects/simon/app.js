@@ -26,7 +26,7 @@ $(document).ready(function () {
     createjs.Sound.registerSound("https://dl.dropboxusercontent.com/u/13022985/simonSound4.mp3", 'yellow');
 
     // All we should need to do is bind our DOM elements to our game object
-    let gameElements = {
+    var gameElements = {
         red: getButtonCallbacks('red'),
         green: getButtonCallbacks('green'),
         blue: getButtonCallbacks('blue'),
@@ -39,7 +39,7 @@ $(document).ready(function () {
     myGame = new SimonGame(gameElements);
 
     // And attach our event handlers
-    let colors = ['red', 'green', 'blue', 'yellow'];
+    var colors = ['red', 'green', 'blue', 'yellow'];
     colors.map(function (color) {
         $('#' + color).on('click', function () {
             myGame.pressButton(color);
@@ -64,12 +64,10 @@ $(document).ready(function () {
     });
 
     $('#strictButton').click(function () {
-        console.log("checked? " + $(this).prop('checked'));
         if ($(this).prop('checked')) {
             myGame.setStrict(true);
         } else {
             myGame.setStrict(false);
         }
-        // myGame.strict(true);
     });
 });
