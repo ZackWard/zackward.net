@@ -4,7 +4,7 @@ var MDPDisplay = React.createClass({
     render: function () {
         return React.createElement(
             "div",
-            { className: "markdown-previewer-display" },
+            { id: "markdown-previewer-display" },
             React.createElement("div", { dangerouslySetInnerHTML: this.translateMD() })
         );
     },
@@ -22,7 +22,7 @@ var MDPInput = React.createClass({
     render: function () {
         return React.createElement(
             "div",
-            { className: "markdown-previewer-input" },
+            { id: "markdown-previewer-input" },
             React.createElement("textarea", { onChange: this.handleInputChange, rows: "10", cols: "80", value: this.props.data })
         );
     },
@@ -37,7 +37,7 @@ var MDPApp = React.createClass({
     render: function () {
         return React.createElement(
             "div",
-            { className: "markdown-previewer-app" },
+            { id: "markdown-previewer-app" },
             React.createElement(
                 "h1",
                 null,
@@ -52,6 +52,20 @@ var MDPApp = React.createClass({
         return {
             data: "This is a test"
         };
+    },
+
+    componentDidMount: function () {
+        $.ajax({
+            url: "https://dl.dropboxusercontent.com/u/13022985/example.md",
+            dataType: 'text',
+            cache: false,
+            success: function (data) {
+                this.setState({ data: data });
+            }.bind(this),
+            error: function (xhr, status, err) {
+                console.error(this.props.url, status, err.toString());
+            }.bind(this)
+        });
     },
 
     updateText: function (newText) {

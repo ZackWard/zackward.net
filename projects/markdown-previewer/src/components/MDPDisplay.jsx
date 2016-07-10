@@ -1,7 +1,7 @@
 var MDPDisplay = React.createClass({
     render: function () {
         return (
-            <div className="markdown-previewer-display">
+            <div id="markdown-previewer-display">
                 <div dangerouslySetInnerHTML={this.translateMD()}></div>
             </div>
         );

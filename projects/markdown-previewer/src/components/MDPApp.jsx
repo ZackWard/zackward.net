@@ -1,7 +1,7 @@
 var MDPApp = React.createClass({
     render: function () {
         return (
-            <div className="markdown-previewer-app">
+            <div id="markdown-previewer-app">
                 <h1>Markdown Previewer</h1>
                 <MDPInput data={this.state.data} updateText={this.updateText}></MDPInput>
                 <MDPDisplay data={this.state.data}></MDPDisplay>
@@ -13,6 +13,20 @@ var MDPApp = React.createClass({
         return {
             data: "This is a test"
         };
+    },
+
+    componentDidMount: function() {
+        $.ajax({
+            url: "https://dl.dropboxusercontent.com/u/13022985/example.md",
+            dataType: 'text',
+            cache: false,
+            success: function(data) {
+                this.setState({data: data});
+            }.bind(this),
+            error: function(xhr, status, err) {
+                console.error(this.props.url, status, err.toString());
+            }.bind(this)
+        });
     },
 
     updateText: function (newText) {

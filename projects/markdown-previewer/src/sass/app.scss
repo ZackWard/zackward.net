@@ -1,25 +1,43 @@
 $padding: 6px;
 
-nav {
-  ul {
-    margin: 0;
-    padding: $padding;
-    list-style: none;
+#markdown-previewer-app {
+
+  #markdown-previewer-display {
+    box-sizing: border-box;
+    background: gray;
+    display: inline-block;
+    float: right;
   }
 
-  li { display: inline-block; }
+  #markdown-previewer-input {
+    box-sizing: border-box;
+    background: dimgray;
+    display: inline-block;
 
-  a {
-    display: block;
-    padding: $padding 12px;
-    text-decoration: none;
+    textarea {
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 
-#zack {
-  #nested {
-    a {
-      color: green;
-    }
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 768px) { 
+
+  #markdown-previewer-display,
+  #markdown-previewer-input {
+    width: 50vw;
+    height: 100vh;
   }
+
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 992px) { 
+
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) { 
+
 }

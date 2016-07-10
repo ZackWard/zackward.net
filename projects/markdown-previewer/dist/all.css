@@ -1,15 +1,23 @@
-nav ul {
-  margin: 0;
-  padding: 6px;
-  list-style: none; }
+#markdown-previewer-app #markdown-previewer-display {
+  box-sizing: border-box;
+  background: gray;
+  display: inline-block;
+  float: right; }
 
-nav li {
+#markdown-previewer-app #markdown-previewer-input {
+  box-sizing: border-box;
+  background: dimgray;
   display: inline-block; }
+  #markdown-previewer-app #markdown-previewer-input textarea {
+    width: 100%;
+    height: 100%; }
 
-nav a {
-  display: block;
-  padding: 6px 12px;
-  text-decoration: none; }
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  #markdown-previewer-display,
+  #markdown-previewer-input {
+    width: 50vw;
+    height: 100vh; } }
 
-#zack #nested a {
-  color: green; }
+/* Medium devices (desktops, 992px and up) */
+/* Large devices (large desktops, 1200px and up) */
