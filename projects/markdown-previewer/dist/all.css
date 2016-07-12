@@ -1,0 +1,16 @@
+/* Variables */
+#markdown-previewer-app #markdown-previewer-input {
+  margin-top: 20px; }
+  #markdown-previewer-app #markdown-previewer-input textarea {
+    position: relative;
+    border: 1px solid #888;
+    overflow: auto;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: 80%;
+    resize: none;
+    height: 80%;
+    padding: 20px; }
+
+#markdown-previewer-app #markdown-previewer-display {
+  margin-top: 20px; }

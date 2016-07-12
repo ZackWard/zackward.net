@@ -1,0 +1,25 @@
+/* Variables */
+$borderColor: #888;
+
+#markdown-previewer-app {
+
+  #markdown-previewer-input {
+    margin-top: 20px; 
+
+    textarea {
+      position: relative;
+      border: 1px solid $borderColor;
+      overflow: auto;
+      left: 50%;
+      transform: translate(-50%, 0);
+      width: 80%;
+      resize: none;
+      height: 80%;
+      padding: 20px;
+    }
+  }
+
+  #markdown-previewer-display {
+    margin-top: 20px;
+  }
+}
