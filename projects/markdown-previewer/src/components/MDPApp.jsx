@@ -2,31 +2,26 @@ var MDPApp = React.createClass({
     render: function () {
         return (
             <div id="markdown-previewer-app">
-                <h1>Markdown Previewer</h1>
-                <MDPInput data={this.state.data} updateText={this.updateText}></MDPInput>
-                <MDPDisplay data={this.state.data}></MDPDisplay>
+                <div className="container-fluid">
+                    <div className="row">
+                        <div className="col-xs-12 col-sm-6">
+                            <MDPInput data={this.state.data} updateText={this.updateText}></MDPInput>
+                            <p className="text-center"><small>Built by <a href="http://www.zackward.net">Zack Ward</a>. Hosted on <a href="https://github.com/ZackWard/zackward.github.io/tree/master/projects/markdown-previewer"><i className="fa fa-github"></i> GitHub</a>.</small></p>
+                        </div>
+                        <div className="col-xs-12 col-sm-6">
+                            <hr className="visible-xs-block" />
+                            <MDPDisplay data={this.state.data}></MDPDisplay>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     },
 
     getInitialState: function () {
         return {
-            data: "This is a test"
+            data: "Enter **markdown** here."
         };
-    },
-
-    componentDidMount: function() {
-        $.ajax({
-            url: "https://dl.dropboxusercontent.com/u/13022985/example.md",
-            dataType: 'text',
-            cache: false,
-            success: function(data) {
-                this.setState({data: data});
-            }.bind(this),
-            error: function(xhr, status, err) {
-                console.error(this.props.url, status, err.toString());
-            }.bind(this)
-        });
     },
 
     updateText: function (newText) {
@@ -40,3 +35,6 @@ ReactDOM.render(
   <MDPApp />,
   document.getElementById('app')
 );
+
+// Set up autosize here
+autosize($('textarea'));

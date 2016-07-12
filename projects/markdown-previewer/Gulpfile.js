@@ -4,6 +4,7 @@ var babel = require('gulp-babel');
 var concat = require('gulp-concat');
 
 var fileList = [
+    './node_modules/autosize/dist/autosize.min.js',
    './src/components/MDPDisplay.jsx',
    './src/components/MDPInput.jsx',
    './src/components/MDPApp.jsx'

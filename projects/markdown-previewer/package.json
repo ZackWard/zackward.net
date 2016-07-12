@@ -20,5 +20,8 @@
     "presets": [
       "react"
     ]
+  },
+  "dependencies": {
+    "autosize": "^3.0.15"
   }
 }

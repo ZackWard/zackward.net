@@ -1,23 +1,16 @@
-#markdown-previewer-app #markdown-previewer-display {
-  box-sizing: border-box;
-  background: gray;
-  display: inline-block;
-  float: right; }
-
+/* Variables */
 #markdown-previewer-app #markdown-previewer-input {
-  box-sizing: border-box;
-  background: dimgray;
-  display: inline-block; }
+  margin-top: 20px; }
   #markdown-previewer-app #markdown-previewer-input textarea {
-    width: 100%;
-    height: 100%; }
+    position: relative;
+    border: 1px solid #888;
+    overflow: auto;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: 80%;
+    resize: none;
+    height: 80%;
+    padding: 20px; }
 
-/* Small devices (tablets, 768px and up) */
-@media (min-width: 768px) {
-  #markdown-previewer-display,
-  #markdown-previewer-input {
-    width: 50vw;
-    height: 100vh; } }
-
-/* Medium devices (desktops, 992px and up) */
-/* Large devices (large desktops, 1200px and up) */
+#markdown-previewer-app #markdown-previewer-display {
+  margin-top: 20px; }
