@@ -97,7 +97,7 @@ var MDPDisplay = React.createClass({
     },
 
     translateMD: function () {
-        let translatedMD = marked(this.props.data, { renderer: renderer });
+        var translatedMD = marked(this.props.data, { renderer: renderer });
         return {
             __html: translatedMD
         };
