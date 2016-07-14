@@ -13,6 +13,9 @@ var CamperLeaderboard = React.createClass({
                 <div className="row">
                     <div className="col-xs-12 text-center">
                         <h1>FreeCodeCamp Leaderboard</h1>
+                        <p>
+                            <small>Built with <i className="fa fa-heart"></i> by <a href="http://www.zackward.net">Zack Ward</a>. Hosted on <a target="_blank" href="https://github.com/ZackWard/zackward.github.io/tree/master/projects/camper-leaderboard"><i className="fa fa-github"></i> GitHub</a></small>
+                        </p>
                     </div>
                 </div>
                 <div className="row">

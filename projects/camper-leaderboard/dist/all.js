@@ -81,6 +81,29 @@ var CamperLeaderboard = React.createClass({
                         "h1",
                         null,
                         "FreeCodeCamp Leaderboard"
+                    ),
+                    React.createElement(
+                        "p",
+                        null,
+                        React.createElement(
+                            "small",
+                            null,
+                            "Built with ",
+                            React.createElement("i", { className: "fa fa-heart" }),
+                            " by ",
+                            React.createElement(
+                                "a",
+                                { href: "http://www.zackward.net" },
+                                "Zack Ward"
+                            ),
+                            ". Hosted on ",
+                            React.createElement(
+                                "a",
+                                { target: "_blank", href: "https://github.com/ZackWard/zackward.github.io/tree/master/projects/camper-leaderboard" },
+                                React.createElement("i", { className: "fa fa-github" }),
+                                " GitHub"
+                            )
+                        )
                     )
                 )
             ),
