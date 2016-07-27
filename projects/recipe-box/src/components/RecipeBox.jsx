@@ -18,6 +18,16 @@ var RecipeBox = React.createClass({
                 <RecipeForm recipes={this.state.recipes}  
                                     recipeIndex={this.state.recipeIndex} 
                                     updateRecipe={this.updateRecipe}></RecipeForm>
+                <div className="row">
+                    <div className="col-xs-12 text-center">
+                        <p>
+                            <small>
+                                Built by <a href="http://www.zackward.net">Zack Ward</a>. 
+                                Hosted on <a href="https://github.com/ZackWard/zackward.github.io/tree/master/projects/recipe-box"><i className="fa fa-github"></i> GitHub</a>
+                            </small>
+                        </p>
+                    </div>
+                </div>
             </div>
         );
     },

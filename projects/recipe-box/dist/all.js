@@ -267,7 +267,36 @@ var RecipeBox = React.createClass({
             ),
             React.createElement(RecipeForm, { recipes: this.state.recipes,
                 recipeIndex: this.state.recipeIndex,
-                updateRecipe: this.updateRecipe })
+                updateRecipe: this.updateRecipe }),
+            React.createElement(
+                "div",
+                { className: "row" },
+                React.createElement(
+                    "div",
+                    { className: "col-xs-12 text-center" },
+                    React.createElement(
+                        "p",
+                        null,
+                        React.createElement(
+                            "small",
+                            null,
+                            "Built by ",
+                            React.createElement(
+                                "a",
+                                { href: "http://www.zackward.net" },
+                                "Zack Ward"
+                            ),
+                            ". Hosted on ",
+                            React.createElement(
+                                "a",
+                                { href: "https://github.com/ZackWard/zackward.github.io/tree/master/projects/recipe-box" },
+                                React.createElement("i", { className: "fa fa-github" }),
+                                " GitHub"
+                            )
+                        )
+                    )
+                )
+            )
         );
     },
 
