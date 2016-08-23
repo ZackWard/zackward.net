@@ -1,37 +1,18 @@
 #game-of-life {
 
-    margin-top: 60px;
-
-    #game-of-life-menu {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100vw;
-        height: 500px;
-        z-index: 100;
-        background: lightslategray;
-        box-shadow: 0px 2px 5px -2px;
-        transform: translate3d(0, -440px, 0);
-        transition: transform .2s, color .5s;
-
-        i {
-            transition: transform .2s;
-        }
-    }
-
-    #game-of-life-menu.active {
-        transform: translate3d(0, 0, 0);
-
-        i.fa-chevron-down {
-            transform: rotate3d(0, 0, 1, 180deg);
-        }
-    }
+    width: 100%;
 
     #gol-board {
+        width: 750px;
+        overflow: hidden hidden;
         position: absolute;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
+    }
+
+    #gol-board::before {
+        content: " "
     }
 
     .gol-clear {
@@ -40,10 +21,10 @@
 
     .gol-cell {
         float: left;
-        width: 20px;
-        height: 20px;
-        border: 1px solid black;
-        background: slategray;
+        width: 10px;
+        height: 10px;
+        /* border: 1px solid black;
+        background: slategray; */
     }
 
     .gol-cell::before {
@@ -52,13 +33,10 @@
 
     .alive {
         background: black;
+        color: white;
     }
-}
 
-#game-of-life-menu-bottom {
-    position: absolute;
-    bottom: 0px;
-    width: 100%;
-    height: 60px;
-    text-align: center;
+    nav {
+        z-index: 100;
+    }
 }

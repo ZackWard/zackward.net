@@ -2,8 +2,7 @@ import * as React from "react";
 
 import {LifeMenu} from "./LifeMenu";
 import {LifeBoard} from "./LifeBoard";
-import {golCell} from "../golCell.ts";
-import {golBoard} from "../golBoard";
+import {PubSub} from "../gol-pubsub.ts";
 
 export interface GameOfLifeProps {
     rows: number,
@@ -11,77 +10,77 @@ export interface GameOfLifeProps {
 }
 
 export interface GameOfLifeState {
-    generations: number;
-    playing: boolean;
-    board: golBoard;
+    generation: number;
+    ticking: boolean;
 }
 
 export class GameOfLife extends React.Component<GameOfLifeProps, GameOfLifeState> {
 
+    private pubsub: PubSub;
+
     constructor(props: GameOfLifeProps) {
         super(props);
 
-        // Prebind methods
-        this.updateBoard = this.updateBoard.bind(this);
-        this.clearBoard = this.clearBoard.bind(this);
-        this.togglePlaying = this.togglePlaying.bind(this);
-        this.tick = this.tick.bind(this);
-        
+        // Here is my attempt at a pubsub event system
+        this.pubsub = new PubSub();
+
         this.state = {
-            generations: 0,
-            playing: false,
-            board: new golBoard(this.props.cols, this.props.rows)
+            generation: 0,
+            ticking: true
         };
 
+        // Prebind methods
+        this.toggleTicking = this.toggleTicking.bind(this);
+        this.incrementGeneration = this.incrementGeneration.bind(this);
+        this.resetGeneration = this.resetGeneration.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this);
     }
     
     render() {
+
+        let styleString: string = `
+            .gol-cell {
+                
+            }
+        `;
+
         return (
             <div id="game-of-life">
-                <LifeMenu generations={this.state.generations} togglePlaying={this.togglePlaying} clearBoard={this.clearBoard} playing={this.state.playing} />
-                <LifeBoard board={this.state.board} onUpdate={this.updateBoard}></LifeBoard>
+                <style>
+                    {styleString}
+                </style>
+                <LifeMenu pubsub={this.pubsub} generation={this.state.generation} ticking={this.state.ticking}></LifeMenu>
+                <LifeBoard pubsub={this.pubsub} width={this.props.cols} height={this.props.rows} ticking={this.state.ticking} speed={50}></LifeBoard>
             </div>
         );
+    }  
+
+    componentDidMount() {
+        this.pubsub.on("toggle-ticking", () => {this.toggleTicking()});
+        this.pubsub.on('reset-generation', () => {this.resetGeneration()});
+        this.pubsub.on('increment-generation', () => {this.incrementGeneration()});
     }
 
-    updateBoard(board: golBoard) {
+    toggleTicking() {
+        let newStatus: boolean = this.state.ticking ? false : true;
+        if (newStatus) this.pubsub.emit('force-tick');
         this.setState({
-            generations: board.generation,
-            playing: this.state.playing,
-            board: board
+            generation: this.state.generation,
+            ticking: newStatus
         });
     }
 
-    clearBoard() {
-        this.state.board.clear();
-        this.updateBoard(this.state.board);
+    incrementGeneration() {
+        this.setState({
+            ticking: this.state.ticking,
+            generation: this.state.generation + 1
+        });
     }
 
-    togglePlaying() {
-        if (this.state.playing) {
-            this.setState({
-                generations: this.state.generations,
-                playing: false,
-                board: this.state.board
-            });
-        } else {
-            this.setState({
-                generations: this.state.generations,
-                playing: true,
-                board: this.state.board
-            });
-            // Ok, now we need to actually start the ticker
-            window.setTimeout(() => this.tick(), 250);
-        }
-    }
-
-    tick() {
-        // If the player has stopped the game, we won't proceed
-        if (! this.state.playing) {
-            return;
-        }
-        this.state.board.getNextGeneration();
-        this.updateBoard(this.state.board);
-        window.setTimeout(() => this.tick(), 250);
+    resetGeneration() {
+        this.setState({
+            ticking: this.state.ticking,
+            generation: 0
+        });
     }
 }

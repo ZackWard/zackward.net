@@ -48,7 +48,7 @@
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(2);
 	var GameOfLife_1 = __webpack_require__(3);
-	ReactDOM.render(React.createElement(GameOfLife_1.GameOfLife, {cols: 30, rows: 30}), document.getElementById('app'));
+	ReactDOM.render(React.createElement(GameOfLife_1.GameOfLife, {cols: 75, rows: 75}), document.getElementById('app'));
 
 
 /***/ },
@@ -76,64 +76,53 @@
 	var React = __webpack_require__(1);
 	var LifeMenu_1 = __webpack_require__(4);
 	var LifeBoard_1 = __webpack_require__(5);
-	var golBoard_1 = __webpack_require__(6);
+	var gol_pubsub_ts_1 = __webpack_require__(7);
 	var GameOfLife = (function (_super) {
 	    __extends(GameOfLife, _super);
 	    function GameOfLife(props) {
 	        _super.call(this, props);
-	        // Prebind methods
-	        this.updateBoard = this.updateBoard.bind(this);
-	        this.clearBoard = this.clearBoard.bind(this);
-	        this.togglePlaying = this.togglePlaying.bind(this);
-	        this.tick = this.tick.bind(this);
+	        // Here is my attempt at a pubsub event system
+	        this.pubsub = new gol_pubsub_ts_1.PubSub();
 	        this.state = {
-	            generations: 0,
-	            playing: false,
-	            board: new golBoard_1.golBoard(this.props.cols, this.props.rows)
+	            generation: 0,
+	            ticking: true
 	        };
+	        // Prebind methods
+	        this.toggleTicking = this.toggleTicking.bind(this);
+	        this.incrementGeneration = this.incrementGeneration.bind(this);
+	        this.resetGeneration = this.resetGeneration.bind(this);
+	        this.componentDidMount = this.componentDidMount.bind(this);
 	    }
 	    GameOfLife.prototype.render = function () {
-	        return (React.createElement("div", {id: "game-of-life"}, React.createElement(LifeMenu_1.LifeMenu, {generations: this.state.generations, togglePlaying: this.togglePlaying, clearBoard: this.clearBoard, playing: this.state.playing}), React.createElement(LifeBoard_1.LifeBoard, {board: this.state.board, onUpdate: this.updateBoard})));
+	        var styleString = "\n            .gol-cell {\n                \n            }\n        ";
+	        return (React.createElement("div", {id: "game-of-life"}, React.createElement("style", null, styleString), React.createElement(LifeMenu_1.LifeMenu, {pubsub: this.pubsub, generation: this.state.generation, ticking: this.state.ticking}), React.createElement(LifeBoard_1.LifeBoard, {pubsub: this.pubsub, width: this.props.cols, height: this.props.rows, ticking: this.state.ticking, speed: 50})));
 	    };
-	    GameOfLife.prototype.updateBoard = function (board) {
+	    GameOfLife.prototype.componentDidMount = function () {
+	        var _this = this;
+	        this.pubsub.on("toggle-ticking", function () { _this.toggleTicking(); });
+	        this.pubsub.on('reset-generation', function () { _this.resetGeneration(); });
+	        this.pubsub.on('increment-generation', function () { _this.incrementGeneration(); });
+	    };
+	    GameOfLife.prototype.toggleTicking = function () {
+	        var newStatus = this.state.ticking ? false : true;
+	        if (newStatus)
+	            this.pubsub.emit('force-tick');
 	        this.setState({
-	            generations: board.generation,
-	            playing: this.state.playing,
-	            board: board
+	            generation: this.state.generation,
+	            ticking: newStatus
 	        });
 	    };
-	    GameOfLife.prototype.clearBoard = function () {
-	        this.state.board.clear();
-	        this.updateBoard(this.state.board);
+	    GameOfLife.prototype.incrementGeneration = function () {
+	        this.setState({
+	            ticking: this.state.ticking,
+	            generation: this.state.generation + 1
+	        });
 	    };
-	    GameOfLife.prototype.togglePlaying = function () {
-	        var _this = this;
-	        if (this.state.playing) {
-	            this.setState({
-	                generations: this.state.generations,
-	                playing: false,
-	                board: this.state.board
-	            });
-	        }
-	        else {
-	            this.setState({
-	                generations: this.state.generations,
-	                playing: true,
-	                board: this.state.board
-	            });
-	            // Ok, now we need to actually start the ticker
-	            window.setTimeout(function () { return _this.tick(); }, 250);
-	        }
-	    };
-	    GameOfLife.prototype.tick = function () {
-	        var _this = this;
-	        // If the player has stopped the game, we won't proceed
-	        if (!this.state.playing) {
-	            return;
-	        }
-	        this.state.board.getNextGeneration();
-	        this.updateBoard(this.state.board);
-	        window.setTimeout(function () { return _this.tick(); }, 250);
+	    GameOfLife.prototype.resetGeneration = function () {
+	        this.setState({
+	            ticking: this.state.ticking,
+	            generation: 0
+	        });
 	    };
 	    return GameOfLife;
 	}(React.Component));
@@ -155,22 +144,21 @@
 	    __extends(LifeMenu, _super);
 	    function LifeMenu() {
 	        _super.call(this);
-	        // Set initial state
-	        this.state = {
-	            visible: false
-	        };
 	        // Bind this instance to our functions
-	        this.toggle = this.toggle.bind(this);
+	        this.singleTick = this.singleTick.bind(this);
 	    }
 	    LifeMenu.prototype.render = function () {
 	        var _this = this;
-	        var playIcon = "fa fa-3x " + (this.props.playing ? "fa-pause" : "fa-play");
-	        return (React.createElement("div", {id: "game-of-life-menu", className: this.state.visible ? "active" : ""}, React.createElement("ul", null, React.createElement("li", null, "Play/Pause"), React.createElement("li", null, "Clear"), React.createElement("li", null, "Size"), React.createElement("li", null, "Speed")), React.createElement("div", {id: "game-of-life-menu-bottom"}, React.createElement("span", null, "Generations: ", this.props.generations), React.createElement("a", {href: "#", onClick: this.toggle}, React.createElement("i", {className: "fa fa-chevron-down fa-3x", "aria-hidden": "true"})), React.createElement("a", {href: "#", onClick: function () { return _this.props.togglePlaying(); }}, React.createElement("i", {className: playIcon, "aria-hidden": "true"})), React.createElement("a", {href: "#", onClick: function () { return _this.props.clearBoard(); }}, "Clear"))));
+	        var playIcon = "fa " + (this.props.ticking ? "fa-pause" : "fa-play");
+	        var playPause = (this.props.ticking ? "  Pause" : "   Play");
+	        return (React.createElement("nav", {className: "navbar navbar-default"}, React.createElement("div", {className: "container-fluid"}, React.createElement("div", {className: "navbar-header"}, React.createElement("button", {type: "button", className: "navbar-toggle collapsed", "data-toggle": "collapse", "data-target": "#bs-example-navbar-collapse-1", "aria-expanded": "false"}, React.createElement("span", {className: "sr-only"}, "Toggle navigation"), React.createElement("span", {className: "icon-bar"}), React.createElement("span", {className: "icon-bar"}), React.createElement("span", {className: "icon-bar"})), React.createElement("a", {className: "navbar-brand", href: "#"}, "Game of Life")), React.createElement("div", {className: "collapse navbar-collapse", id: "bs-example-navbar-collapse-1"}, React.createElement("ul", {className: "nav navbar-nav"}, React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.singleTick}, React.createElement("i", {className: "fa fa-step-forward"}), "  Next")), React.createElement("li", null, React.createElement("a", {href: "#", onClick: function () { _this.props.pubsub.emit('toggle-ticking'); }}, React.createElement("i", {className: playIcon}), playPause)), React.createElement("li", null, React.createElement("a", {href: "#", onClick: function () { _this.props.pubsub.emit('clear'); }}, React.createElement("i", {className: "fa fa-trash"}), "  Clear")), React.createElement("li", null, React.createElement("a", {href: "#", onClick: function () { _this.props.pubsub.emit('randomize'); }}, React.createElement("i", {className: "fa fa-random"}), "  Randomize"))), React.createElement("ul", {className: "nav navbar-nav navbar-right"}, React.createElement("li", {className: "dropdown"}, React.createElement("a", {href: "#", className: "dropdown-toggle", "data-toggle": "dropdown", role: "button", "aria-haspopup": "true", "aria-expanded": "false"}, "Info ", React.createElement("span", {className: "caret"})), React.createElement("ul", {className: "dropdown-menu"}, React.createElement("li", null, React.createElement("a", {href: "http://www.zackward.net"}, "Coded with ", React.createElement("i", {className: "fa fa-heart"}), " by Zack Ward")), React.createElement("li", null, React.createElement("a", {href: "https://github.com/ZackWard/zackward.github.io/tree/master/projects/game-of-life/"}, "Code hosted on ", React.createElement("i", {className: "fa fa-github"}), " GitHub")))), React.createElement("li", null, React.createElement("a", {hrer: "#"}, "Generations: ", React.createElement("span", {className: "badge"}, this.props.generation))))))));
 	    };
-	    LifeMenu.prototype.toggle = function () {
-	        this.setState({
-	            visible: this.state.visible ? false : true
-	        });
+	    LifeMenu.prototype.singleTick = function () {
+	        // Only allow a single tick if we aren't actively ticking. This should prevent a situation where multiple tick chains 
+	        // are running
+	        if (this.props.ticking)
+	            return;
+	        this.props.pubsub.emit('one-tick');
 	    };
 	    return LifeMenu;
 	}(React.Component));
@@ -188,42 +176,211 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var React = __webpack_require__(1);
+	var LifeCell_1 = __webpack_require__(6);
 	var LifeBoard = (function (_super) {
 	    __extends(LifeBoard, _super);
 	    function LifeBoard(props) {
 	        _super.call(this, props);
+	        // Prebind methods here
+	        this.killCell = this.killCell.bind(this);
+	        this.birthCell = this.birthCell.bind(this);
 	        this.toggleCell = this.toggleCell.bind(this);
-	    }
-	    LifeBoard.prototype.render = function () {
-	        var _this = this;
-	        var cellKey = 0;
-	        var cellArray = [];
-	        for (var y = 0; y < this.props.board.height; y++) {
-	            var _loop_1 = function(x) {
-	                var thisCell = this_1.props.board.getCell(x, y);
-	                var cellClasses = "gol-cell";
-	                cellClasses += thisCell.alive ? " alive " : "";
-	                cellClasses += (thisCell.x === 0) ? " gol-clear " : "";
-	                cellArray.push(React.createElement("div", {key: cellKey, onClick: function () { _this.toggleCell(thisCell); }, className: cellClasses}));
-	                cellKey++;
-	            };
-	            var this_1 = this;
-	            for (var x = 0; x < this.props.board.width; x++) {
-	                _loop_1(x);
+	        this.updateNeighbors = this.updateNeighbors.bind(this);
+	        this.getToroidalX = this.getToroidalX.bind(this);
+	        this.getToroidalY = this.getToroidalY.bind(this);
+	        this.flushBoard = this.flushBoard.bind(this);
+	        this.clearBoard = this.clearBoard.bind(this);
+	        this.randomizeBoard = this.randomizeBoard.bind(this);
+	        this.tick = this.tick.bind(this);
+	        this.doTick = this.doTick.bind(this);
+	        this.componentDidMount = this.componentDidMount.bind(this);
+	        // We'll build our blank board here
+	        this.pendingBoard = {};
+	        for (var x = 0; x < this.props.width; x++) {
+	            for (var y = 0; y < this.props.height; y++) {
+	                this.pendingBoard[x + 'x' + y] = {
+	                    alive: false,
+	                    livingNeighbors: 0
+	                };
 	            }
 	        }
-	        return (React.createElement("div", {id: "gol-board"}, cellArray));
+	        // Birth random cells onto our blank board
+	        for (var x = 0; x < this.props.width; x++) {
+	            for (var y = 0; y < this.props.height; y++) {
+	                if (Math.random() < 0.5)
+	                    this.birthCell(x, y);
+	            }
+	        }
+	        // Set the state to a copy of the pendingBoard object
+	        this.state = {
+	            cells: JSON.parse(JSON.stringify(this.pendingBoard))
+	        };
+	    }
+	    LifeBoard.prototype.render = function () {
+	        var cellElementArray = [];
+	        for (var y = 0; y < this.props.height; y++) {
+	            for (var x = 0; x < this.props.width; x++) {
+	                var cellKey = x + 'x' + y;
+	                cellElementArray.push(React.createElement(LifeCell_1.LifeCell, {key: cellKey, x: x, y: y, alive: this.state.cells[cellKey].alive, toggleCell: this.toggleCell}));
+	            }
+	        }
+	        return (React.createElement("div", {id: "gol-board"}, cellElementArray));
 	    };
-	    LifeBoard.prototype.toggleCell = function (cell) {
-	        console.log("Toggle cell [" + cell.x + ", " + cell.y + "]!");
-	        if (cell.alive) {
-	            this.props.board.kill(cell.x, cell.y);
+	    LifeBoard.prototype.getToroidalX = function (x) {
+	        if (x < 0)
+	            return this.props.width - 1;
+	        if (x >= this.props.width)
+	            return x % this.props.width;
+	        return x;
+	    };
+	    LifeBoard.prototype.getToroidalY = function (y) {
+	        if (y < 0)
+	            return this.props.height - 1;
+	        if (y >= this.props.height)
+	            return y % this.props.height;
+	        return y;
+	    };
+	    LifeBoard.prototype.updateNeighbors = function (x, y, modification) {
+	        var _this = this;
+	        [
+	            // Above
+	            [0, -1],
+	            // Below
+	            [0, 1],
+	            // Left
+	            [-1, 0],
+	            // Right 
+	            [1, 0],
+	            // Above Left
+	            [-1, -1],
+	            // Above Right
+	            [1, -1],
+	            // Below Left
+	            [-1, 1],
+	            // Below Right
+	            [1, 1]
+	        ].map(function (addressTransformation) {
+	            var dx = addressTransformation[0];
+	            var dy = addressTransformation[1];
+	            _this.pendingBoard[_this.getToroidalX(x + dx) + 'x' + _this.getToroidalY(y + dy)].livingNeighbors += modification;
+	        });
+	    };
+	    LifeBoard.prototype.modifyCell = function (x, y, alive) {
+	        // Use toroidal address
+	        var nx = this.getToroidalX(x);
+	        var ny = this.getToroidalY(y);
+	        this.pendingBoard[nx + 'x' + ny].alive = alive;
+	        this.updateNeighbors(nx, ny, (alive ? 1 : -1));
+	    };
+	    LifeBoard.prototype.birthCell = function (x, y, updateBoard) {
+	        if (updateBoard === void 0) { updateBoard = false; }
+	        // If this cell is already alive, bail out
+	        if (this.pendingBoard[x + 'x' + y].alive)
+	            return;
+	        this.modifyCell(x, y, true);
+	        if (updateBoard)
+	            this.flushBoard();
+	    };
+	    LifeBoard.prototype.killCell = function (x, y, updateBoard) {
+	        if (updateBoard === void 0) { updateBoard = false; }
+	        // If this cell is already dead, bail out
+	        if (!this.pendingBoard[x + 'x' + y].alive)
+	            return;
+	        this.modifyCell(x, y, false);
+	        if (updateBoard)
+	            this.flushBoard();
+	    };
+	    LifeBoard.prototype.toggleCell = function (x, y) {
+	        if (this.state.cells[x + 'x' + y].alive) {
+	            this.killCell(x, y, true);
 	        }
 	        else {
-	            this.props.board.birth(cell.x, cell.y);
+	            this.birthCell(x, y, true);
 	        }
-	        // We need to let the app know that we've updated state.
-	        this.props.onUpdate(this.props.board);
+	    };
+	    LifeBoard.prototype.flushBoard = function () {
+	        this.setState({
+	            cells: JSON.parse(JSON.stringify(this.pendingBoard)),
+	        });
+	    };
+	    LifeBoard.prototype.clearBoard = function () {
+	        for (var x = 0; x < this.props.width; x++) {
+	            for (var y = 0; y < this.props.height; y++) {
+	                this.killCell(x, y);
+	            }
+	        }
+	        this.flushBoard();
+	        this.props.pubsub.emit("reset-generation");
+	    };
+	    LifeBoard.prototype.randomizeBoard = function () {
+	        this.clearBoard();
+	        for (var x = 0; x < this.props.width; x++) {
+	            for (var y = 0; y < this.props.height; y++) {
+	                if (Math.random() < 0.5)
+	                    this.birthCell(x, y);
+	            }
+	        }
+	        this.flushBoard();
+	    };
+	    LifeBoard.prototype.doTick = function () {
+	        if (!this.props.ticking)
+	            return;
+	        this.tick();
+	    };
+	    LifeBoard.prototype.tick = function () {
+	        var _this = this;
+	        var changeList = [];
+	        for (var x = 0; x < this.props.width; x++) {
+	            for (var y = 0; y < this.props.height; y++) {
+	                var cellAddress = x + 'x' + y;
+	                if (this.pendingBoard[cellAddress].alive) {
+	                    // Cell is alive
+	                    if (this.pendingBoard[cellAddress].livingNeighbors < 2) {
+	                        // Cell is alive but isolated. It will die.
+	                        changeList.push('kill-' + x + '-' + y);
+	                    }
+	                    else if (this.pendingBoard[cellAddress].livingNeighbors > 3) {
+	                        // Cell is alive but crowded. It will die.
+	                        changeList.push('kill-' + x + '-' + y);
+	                    }
+	                }
+	                else {
+	                    // Cell is dead
+	                    if (this.pendingBoard[cellAddress].livingNeighbors == 3) {
+	                        // Cell is dead but has 3 living neighbors. It will be born.
+	                        changeList.push('birth-' + x + '-' + y);
+	                    }
+	                }
+	            }
+	        }
+	        // Now, apply the list of changes to the pending board, and push it to state
+	        changeList.map(function (instruction) {
+	            var instructions = instruction.split('-');
+	            var command = instructions[0];
+	            var x = parseInt(instructions[1]);
+	            var y = parseInt(instructions[2]);
+	            if (command == "kill") {
+	                _this.killCell(x, y);
+	            }
+	            else if (command == "birth") {
+	                _this.birthCell(x, y);
+	            }
+	            else {
+	                console.log("Error with instruction " + command + " [" + x + "x" + "]");
+	            }
+	        });
+	        this.flushBoard();
+	        window.setTimeout(this.doTick, this.props.speed);
+	        this.props.pubsub.emit('increment-generation');
+	    };
+	    LifeBoard.prototype.componentDidMount = function () {
+	        var _this = this;
+	        if (this.props.ticking)
+	            this.doTick();
+	        this.props.pubsub.on("clear", function () { _this.clearBoard(); });
+	        this.props.pubsub.on("force-tick", function () { _this.tick(); });
+	        this.props.pubsub.on("randomize", function () { _this.randomizeBoard(); });
+	        this.props.pubsub.on("one-tick", function () { _this.tick(); });
 	    };
 	    return LifeBoard;
 	}(React.Component));
@@ -235,195 +392,57 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var golCell_ts_1 = __webpack_require__(7);
-	var golBoard = (function () {
-	    function golBoard(width, height) {
-	        this.width = width;
-	        this.height = height;
-	        this.generation = 0;
-	        this.board = {};
-	        this.livingCells = [];
-	        // This will be used to quickly check a cell's neighbors
-	        this.neighbors = [
-	            {
-	                // Above
-	                x: 0,
-	                y: -1
-	            },
-	            {
-	                // Below
-	                x: 0,
-	                y: 1
-	            },
-	            {
-	                // Left
-	                x: -1,
-	                y: 0
-	            },
-	            {
-	                // Right
-	                x: 1,
-	                y: 0
-	            },
-	            {
-	                // Above Left
-	                x: -1,
-	                y: -1
-	            },
-	            {
-	                // Above Right
-	                x: 1,
-	                y: -1
-	            },
-	            {
-	                // Below Left
-	                x: -1,
-	                y: 1
-	            },
-	            {
-	                // Below Right
-	                x: 1,
-	                y: 1
-	            }
-	        ];
-	        for (var x = 0; x < width; x++) {
-	            for (var y = 0; y < height; y++) {
-	                this.board[x + "x" + y] = new golCell_ts_1.golCell(x, y);
-	                // We want to randomly assign life or death to a cell to build a random board pattern
-	                if (Math.random() < 0.5) {
-	                    this.birth(x, y);
-	                }
-	            }
-	        }
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var React = __webpack_require__(1);
+	var LifeCell = (function (_super) {
+	    __extends(LifeCell, _super);
+	    function LifeCell(props) {
+	        _super.call(this, props);
 	    }
-	    golBoard.prototype.getCell = function (x, y) {
-	        var address = this.getToroidalX(x) + "x" + this.getToroidalY(y);
-	        return this.board[address];
-	    };
-	    golBoard.prototype.getToroidalX = function (x) {
-	        var nx = x;
-	        if (nx < 0)
-	            nx = this.width - 1;
-	        if (nx >= this.width)
-	            nx = nx % this.width;
-	        return nx;
-	    };
-	    golBoard.prototype.getToroidalY = function (y) {
-	        var ny = y;
-	        if (ny < 0)
-	            ny = this.height - 1;
-	        if (ny >= this.height)
-	            ny = ny % this.height;
-	        return ny;
-	    };
-	    golBoard.prototype.getLivingNeighborsCount = function (x, y) {
+	    LifeCell.prototype.render = function () {
 	        var _this = this;
-	        var livingNeighbors = 0;
-	        this.neighbors.map(function (neighbor) {
-	            if (_this.getCell(x + neighbor.x, y + neighbor.y).alive)
-	                livingNeighbors++;
-	        });
-	        return livingNeighbors;
+	        return (React.createElement("div", {className: "gol-cell" + (this.props.alive ? " alive " : "") + (this.props.x < 1 ? " gol-clear" : ""), onClick: function () { _this.props.toggleCell(_this.props.x, _this.props.y); }}));
 	    };
-	    golBoard.prototype.kill = function (x, y) {
-	        this.getCell(x, y).alive = false;
-	        if (this.livingCells.indexOf(x + "x" + y) !== -1) {
-	            this.livingCells.splice(this.livingCells.indexOf(x + "x" + y), 1);
-	        }
+	    LifeCell.prototype.shouldComponentUpdate = function (nextProps, nextState) {
+	        return this.props.alive !== nextProps.alive;
 	    };
-	    golBoard.prototype.birth = function (x, y) {
-	        this.getCell(x, y).alive = true;
-	        if (this.livingCells.indexOf(x + "x" + y) === -1) {
-	            this.livingCells.push(x + "x" + y);
-	        }
-	    };
-	    golBoard.prototype.clear = function () {
-	        var _this = this;
-	        var killList = this.livingCells.slice(0);
-	        killList.map(function (cellAddress) {
-	            var x = parseInt(cellAddress.split('x')[0]);
-	            var y = parseInt(cellAddress.split('x')[1]);
-	            _this.kill(x, y);
-	        });
-	    };
-	    golBoard.prototype.getNextGeneration = function () {
-	        var _this = this;
-	        // First, we need to get a list of every living cell, and every cell that is adjacent to a living cell
-	        var livingAndAdjacentList = [];
-	        this.livingCells.map(function (livingCell) {
-	            livingAndAdjacentList.push(livingCell);
-	            var cellAddress = livingCell.split('x');
-	            var x = cellAddress[0];
-	            var y = cellAddress[1];
-	            _this.neighbors.map(function (addressTransformation) {
-	                var nx = _this.getToroidalX(parseInt(x) + addressTransformation.x);
-	                var ny = _this.getToroidalY(parseInt(y) + addressTransformation.y);
-	                if (livingAndAdjacentList.indexOf(nx + "x" + ny) === -1) {
-	                    livingAndAdjacentList.push(nx + "x" + ny);
-	                }
-	            });
-	        });
-	        // Ok, now we have a list of every cell that might change status. Now we need to see what changes will actually occur.
-	        // We can't actually make any changes until we evaluate every living cell and any living-adjacent cells.
-	        var pendingChanges = [];
-	        livingAndAdjacentList.map(function (cellAddress) {
-	            var cellX = parseInt(cellAddress.split('x')[0]);
-	            var cellY = parseInt(cellAddress.split('x')[1]);
-	            var living = _this.getCell(cellX, cellY).alive;
-	            var livingNeighbors = _this.getLivingNeighborsCount(cellX, cellY);
-	            if (living) {
-	                if (livingNeighbors < 2 || livingNeighbors > 3) {
-	                    pendingChanges.push("kill-" + cellX + "-" + cellY);
-	                }
-	            }
-	            else {
-	                if (livingNeighbors == 3) {
-	                    pendingChanges.push("birth-" + cellX + "-" + cellY);
-	                }
-	            }
-	        });
-	        // Now, actually make the changes
-	        console.log(pendingChanges);
-	        this.generation++;
-	        pendingChanges.map(function (orderString) {
-	            var order = orderString.split('-');
-	            var command = order[0];
-	            var x = parseInt(order[1]);
-	            var y = parseInt(order[2]);
-	            if (command === 'kill') {
-	                console.log("Killing " + x + "-" + y);
-	                _this.kill(x, y);
-	            }
-	            else if (command === 'birth') {
-	                console.log("Birthing " + x + "-" + y);
-	                _this.birth(x, y);
-	            }
-	            else {
-	                console.log("Something went wrong");
-	            }
-	        });
-	    };
-	    return golBoard;
-	}());
-	exports.golBoard = golBoard;
+	    return LifeCell;
+	}(React.Component));
+	exports.LifeCell = LifeCell;
 
 
 /***/ },
 /* 7 */
 /***/ function(module, exports) {
 
+	// This is a very simple pub-sub component, my first attempt at one
 	"use strict";
-	var golCell = (function () {
-	    function golCell(x, y, living) {
-	        if (living === void 0) { living = false; }
-	        this.x = x;
-	        this.y = y;
-	        this.alive = living;
+	var PubSub = (function () {
+	    function PubSub() {
+	        this.eventList = {};
 	    }
-	    return golCell;
+	    PubSub.prototype.emit = function (eventName) {
+	        if (this.eventList.hasOwnProperty(eventName) && this.eventList[eventName].length >= 1) {
+	            this.eventList[eventName].forEach(function (listener) {
+	                listener();
+	            });
+	        }
+	    };
+	    PubSub.prototype.on = function (eventName, cb) {
+	        if (!this.eventList.hasOwnProperty(eventName)) {
+	            this.eventList[eventName] = [cb];
+	        }
+	        else {
+	            this.eventList[eventName].push(cb);
+	        }
+	    };
+	    return PubSub;
 	}());
-	exports.golCell = golCell;
-	;
+	exports.PubSub = PubSub;
 
 
 /***/ }

@@ -1,43 +1,26 @@
 #game-of-life {
-  margin-top: 60px; }
-  #game-of-life #game-of-life-menu {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 500px;
-    z-index: 100;
-    background: lightslategray;
-    box-shadow: 0px 2px 5px -2px;
-    transform: translate3d(0, -440px, 0);
-    transition: transform .2s, color .5s; }
-    #game-of-life #game-of-life-menu i {
-      transition: transform .2s; }
-  #game-of-life #game-of-life-menu.active {
-    transform: translate3d(0, 0, 0); }
-    #game-of-life #game-of-life-menu.active i.fa-chevron-down {
-      transform: rotate3d(0, 0, 1, 180deg); }
+  width: 100%; }
   #game-of-life #gol-board {
+    width: 750px;
+    overflow: hidden hidden;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%); }
+  #game-of-life #gol-board::before {
+    content: " "; }
   #game-of-life .gol-clear {
     clear: left; }
   #game-of-life .gol-cell {
     float: left;
-    width: 20px;
-    height: 20px;
-    border: 1px solid black;
-    background: slategray; }
+    width: 10px;
+    height: 10px;
+    /* border: 1px solid black;
+        background: slategray; */ }
   #game-of-life .gol-cell::before {
     content: " "; }
   #game-of-life .alive {
-    background: black; }
-
-#game-of-life-menu-bottom {
-  position: absolute;
-  bottom: 0px;
-  width: 100%;
-  height: 60px;
-  text-align: center; }
+    background: black;
+    color: white; }
+  #game-of-life nav {
+    z-index: 100; }
