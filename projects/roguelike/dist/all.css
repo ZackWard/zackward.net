@@ -1,0 +1,26 @@
+#game-of-life {
+  width: 100%; }
+  #game-of-life #gol-board {
+    width: 750px;
+    overflow: hidden hidden;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%); }
+  #game-of-life #gol-board::before {
+    content: " "; }
+  #game-of-life .gol-clear {
+    clear: left; }
+  #game-of-life .gol-cell {
+    float: left;
+    width: 10px;
+    height: 10px;
+    /* border: 1px solid black;
+        background: slategray; */ }
+  #game-of-life .gol-cell::before {
+    content: " "; }
+  #game-of-life .alive {
+    background: black;
+    color: white; }
+  #game-of-life nav {
+    z-index: 100; }
