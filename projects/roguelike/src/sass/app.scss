@@ -1,42 +1,293 @@
-#game-of-life {
+/* Define custom bootstrap variables here */
 
+
+/* End custom bootstrap variables */
+
+
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
+
+#roguelike-display {
+    background: black;
+    box-sizing: border-box;
+    border-spacing: 0;
+    border: none;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#d-pad-top {
+    display: block;
+    margin-top: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50px;
+}
+
+#d-pad-bottom {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 25px;
+    width: 150px;
+}
+
+.d-pad-button {
+    width: 50px;
+    height: 50px;
+}
+
+
+.roguelike-tile {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    padding: 0px;
+}
+
+.tile {
+    background: url(https://dl.dropboxusercontent.com/u/13022985/tileset.png);
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%; 
+}
 
-    #gol-board {
-        width: 750px;
-        overflow: hidden hidden;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-    }
+#messages {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    color: blue;
+}
 
-    #gol-board::before {
-        content: " "
-    }
+.tile-0 {
+    background-position: 0px 0px;
+}
 
-    .gol-clear {
-        clear: left;
-    }
+.tile-1 {
+    background-position: -32px 0px; 
+}
 
-    .gol-cell {
-        float: left;
-        width: 10px;
-        height: 10px;
-        /* border: 1px solid black;
-        background: slategray; */
-    }
+.tile-2 {
+    background-position: -64px 0px; 
+}
 
-    .gol-cell::before {
-        content: " ";
-    }
+.tile-3 {
+    background-position:  -96px 0px;
+}
 
-    .alive {
-        background: black;
-        color: white;
-    }
+.tile-4 {
+    background-position: -128px 0px;
+}
 
-    nav {
-        z-index: 100;
-    }
+.tile-5 {
+    background-position: -160px 0px;
+}
+
+.tile-6 {
+    background-position: -192px 0px;
+}
+
+.tile-7 {
+    background-position: -224px 0px;
+}
+
+.tile-8 {
+    background-position: 0px -32px;
+}
+
+.tile-9 {
+    background-position: -32px -32px; 
+}
+
+.tile-10 {
+    background-position: -64px -32px; 
+}
+
+.tile-11 {
+    background-position:  -96px -32px;
+}
+
+.tile-12 {
+    background-position: -128px -32px;
+}
+
+.tile-13 {
+    background-position: -160px -32px;
+}
+
+.tile-14 {
+    background-position: -192px -32px;
+}
+
+.tile-15 {
+    background-position: -224px -32px;
+}
+
+.tile-16 {
+    background-position: 0px -64px;
+}
+
+.tile-17 {
+    background-position: -32px -64px; 
+}
+
+.tile-18 {
+    background-position: -64px -64px; 
+}
+
+.tile-19 {
+    background-position:  -96px -64px;
+}
+
+.tile-20 {
+    background-position: -128px -64px;
+}
+
+.tile-21 {
+    background-position: -160px -64px;
+}
+
+.tile-22 {
+    background-position: -192px -64px;
+}
+
+.tile-23 {
+    background-position: -224px -64px;
+}
+
+.tile-24 {
+    background-position: 0px -96px;
+}
+
+.tile-25 {
+    background-position: -32px -96px; 
+}
+
+.tile-26 {
+    background-position: -64px -96px; 
+}
+
+.tile-27 {
+    background-position:  -96px -96px;
+}
+
+.tile-28 {
+    background-position: -128px -96px;
+}
+
+.tile-29 {
+    background-position: -160px -96px;
+}
+
+.tile-30 {
+    background-position: -192px -96px;
+}
+
+.tile-31 {
+    background-position: -224px -96px;
+}
+
+.tile-32 {
+    background-position: 0px -128px;
+}
+
+.tile-33 {
+    background-position: -32px -128px; 
+}
+
+.tile-34 {
+    background-position: -64px -128px; 
+}
+
+.tile-35 {
+    background-position:  -96px -128px;
+}
+
+.tile-36 {
+    background-position: -128px -128px;
+}
+
+.tile-37 {
+    background-position: -160px -128px;
+}
+
+.tile-38 {
+    background-position: -192px -128px;
+}
+
+.tile-39 {
+    background-position: -224px -128px;
+}
+
+.tile-40 {
+    background-position: 0px -160px;
+}
+
+.tile-41 {
+    background-position: -32px -160px; 
+}
+
+.tile-42 {
+    background-position: -64px -160px; 
+}
+
+.tile-43 {
+    background-position:  -96px -160px;
+}
+
+.tile-44 {
+    background-position: -128px -160px;
+}
+
+.tile-45 {
+    background-position: -160px -160px;
+}
+
+.tile-46 {
+    background-position: -192px -160px;
+}
+
+.tile-47 {
+    background-position: -224px -160px;
+}
+
+.tile-48 {
+    background-position: 0px -192px;
+}
+
+.tile-49 {
+    background-position: -32px -192px; 
+}
+
+.tile-50 {
+    background-position: -64px -192px; 
+}
+
+.tile-51 {
+    background-position:  -96px -192px;
+}
+
+.tile-52 {
+    background-position: -128px -192px;
+}
+
+.tile-53 {
+    background-position: -160px -192px;
+}
+
+.tile-54 {
+    background-position: -192px -192px;
+}
+
+.tile-55 {
+    background-position: -224px -192px;
+}
+
+@media (orientation: portrait) {
+}
+
+@media (orientation: landscape) {
 }

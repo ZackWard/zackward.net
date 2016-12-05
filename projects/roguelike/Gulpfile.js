@@ -3,6 +3,7 @@ var ts = require('gulp-typescript');
 var sass = require('gulp-sass');
 var babel = require('gulp-babel');
 var concat = require('gulp-concat');
+var sourcemaps = require('gulp-sourcemaps');
 var webpack = require('webpack-stream');
 
 var sassFiles = [
@@ -15,8 +16,9 @@ gulp.task('default', ['sass', 'webpack'], function () {
 
 gulp.task("sass", function () {
     gulp.src(sassFiles)
+        .pipe(sourcemaps.init())
         .pipe(sass())
-        .pipe(concat('all.css'))
+        .pipe(sourcemaps.write())
         .pipe(gulp.dest('./dist'));
 });
 
