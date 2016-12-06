@@ -44,6 +44,7 @@ export class Display extends React.Component<DisplayProps, DisplayState> {
         this.componentDidMount = this.componentDidMount.bind(this);
         this.componentWillUnmount = this.componentWillUnmount.bind(this);
         this.handleInput = this.handleInput.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
         this.beginSwipe = this.beginSwipe.bind(this);
         this.endSwipe = this.endSwipe.bind(this);
         this.cancelSwipe = this.cancelSwipe.bind(this);
@@ -100,13 +101,14 @@ export class Display extends React.Component<DisplayProps, DisplayState> {
                         {rows}
                     </tbody>
                 </table>
-                <p className="text-center"><small>Use <kbd>A</kbd>, <kbd>S</kbd>, <kbd>D</kbd>, <kbd>W</kbd> to navigate with keyboard, or swipe to move on mobile.</small></p>
+                <p className="text-center"><small>Use the arrow keys, or <kbd>A</kbd>, <kbd>S</kbd>, <kbd>D</kbd>, <kbd>W</kbd> to navigate with keyboard, or swipe to move on mobile.</small></p>
             </div>
         );
     }
 
     componentDidMount() {
         window.addEventListener('keypress', this.handleInput);
+        window.addEventListener('keydown', this.handleKeyDown);
         window.addEventListener('touchstart', this.beginSwipe);
         window.addEventListener('touchend', this.endSwipe);
         window.addEventListener('touchcancel', this.cancelSwipe);
@@ -114,6 +116,7 @@ export class Display extends React.Component<DisplayProps, DisplayState> {
 
     componentWillUnmount() {
         window.removeEventListener('keypress', this.handleInput);
+        window.removeEventListener('keydown', this.handleKeyDown);
         window.removeEventListener('touchstart', this.beginSwipe);
         window.removeEventListener('touchend', this.endSwipe);
         window.removeEventListener('touchcancel', this.cancelSwipe);
@@ -162,8 +165,27 @@ export class Display extends React.Component<DisplayProps, DisplayState> {
         }
     }
 
+    handleKeyDown(e: KeyboardEvent) {
+        e.preventDefault();
+        switch (e.key) {
+            case 'ArrowUp':
+                this.props.moveUp(); 
+                break;
+            case 'ArrowDown': 
+                this.props.moveDown();
+                break;
+            case 'ArrowLeft': 
+                this.props.moveLeft();
+                break;
+            case 'ArrowRight': 
+                this.props.moveRight();
+                break;
+        }
+    }
+
     handleInput(e: KeyboardEvent) {
         e.preventDefault();
+        console.log(e);
         switch (e.key) {
             case 'a': 
                 this.props.moveLeft();

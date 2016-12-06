@@ -2672,6 +2672,7 @@
 	        this.componentDidMount = this.componentDidMount.bind(this);
 	        this.componentWillUnmount = this.componentWillUnmount.bind(this);
 	        this.handleInput = this.handleInput.bind(this);
+	        this.handleKeyDown = this.handleKeyDown.bind(this);
 	        this.beginSwipe = this.beginSwipe.bind(this);
 	        this.endSwipe = this.endSwipe.bind(this);
 	        this.cancelSwipe = this.cancelSwipe.bind(this);
@@ -2702,16 +2703,18 @@
 	        for (var i = 0; i < this.props.rows; i++) {
 	            rows.push(this.getRow(i));
 	        }
-	        return (React.createElement("div", null, React.createElement("table", {id: "roguelike-display"}, React.createElement("tbody", null, rows)), React.createElement("p", {className: "text-center"}, React.createElement("small", null, "Use ", React.createElement("kbd", null, "A"), ", ", React.createElement("kbd", null, "S"), ", ", React.createElement("kbd", null, "D"), ", ", React.createElement("kbd", null, "W"), " to navigate with keyboard, or swipe to move on mobile."))));
+	        return (React.createElement("div", null, React.createElement("table", {id: "roguelike-display"}, React.createElement("tbody", null, rows)), React.createElement("p", {className: "text-center"}, React.createElement("small", null, "Use the arrow keys, or ", React.createElement("kbd", null, "A"), ", ", React.createElement("kbd", null, "S"), ", ", React.createElement("kbd", null, "D"), ", ", React.createElement("kbd", null, "W"), " to navigate with keyboard, or swipe to move on mobile."))));
 	    };
 	    Display.prototype.componentDidMount = function () {
 	        window.addEventListener('keypress', this.handleInput);
+	        window.addEventListener('keydown', this.handleKeyDown);
 	        window.addEventListener('touchstart', this.beginSwipe);
 	        window.addEventListener('touchend', this.endSwipe);
 	        window.addEventListener('touchcancel', this.cancelSwipe);
 	    };
 	    Display.prototype.componentWillUnmount = function () {
 	        window.removeEventListener('keypress', this.handleInput);
+	        window.removeEventListener('keydown', this.handleKeyDown);
 	        window.removeEventListener('touchstart', this.beginSwipe);
 	        window.removeEventListener('touchend', this.endSwipe);
 	        window.removeEventListener('touchcancel', this.cancelSwipe);
@@ -2767,8 +2770,26 @@
 	            _loop_2(i);
 	        }
 	    };
+	    Display.prototype.handleKeyDown = function (e) {
+	        e.preventDefault();
+	        switch (e.key) {
+	            case 'ArrowUp':
+	                this.props.moveUp();
+	                break;
+	            case 'ArrowDown':
+	                this.props.moveDown();
+	                break;
+	            case 'ArrowLeft':
+	                this.props.moveLeft();
+	                break;
+	            case 'ArrowRight':
+	                this.props.moveRight();
+	                break;
+	        }
+	    };
 	    Display.prototype.handleInput = function (e) {
 	        e.preventDefault();
+	        console.log(e);
 	        switch (e.key) {
 	            case 'a':
 	                this.props.moveLeft();
