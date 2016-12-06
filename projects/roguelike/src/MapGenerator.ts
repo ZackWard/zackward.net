@@ -162,7 +162,6 @@ function generateItems(state: roguelikeState): roguelikeState {
         weapon.location = coords[0] + "x" + coords[1];
         state.items.push(weapon);
         state.map.tiles[coords[0] + "x" + coords[1]].item = state.items.length - 1;
-        console.log("Added " + weapon.name + " to " + coords[0] + "x" + coords[1]);
     });
 
     return state;
@@ -202,7 +201,6 @@ function generateEnemy(state: roguelikeState, level: number): roguelikeState {
 
     state.entities.push(enemy);
     state.map.tiles[coords[0] + "x" + coords[1]].entity = state.entities.length - 1;
-    console.log("Added enemy to tile " + coords[0] + "x" + coords[1]);
 
     return state;
 }
@@ -220,8 +218,6 @@ function generateBoss(state: roguelikeState): roguelikeState {
 
     state.entities.push(boss);
     state.map.tiles[coords[0] + "x" + coords[1]].entity = state.entities.length - 1;
-    console.log("Added boss to tile " + coords[0] + "x" + coords[1]);
-
 
     return state;
 }

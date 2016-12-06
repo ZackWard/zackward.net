@@ -107,7 +107,6 @@ export class TileMap {
 
         // Occasionaly, we want to leave a huge area, but nothing larger than the minimum size * 5
         if (zone.width < minSize * 3 && zone.height < minSize * 3 && Math.random() >= 0.925) {
-            console.log("Creating a UUUUGE room!");
             return [zone];
         }
 

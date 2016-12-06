@@ -2216,7 +2216,6 @@
 	        weapon.location = coords[0] + "x" + coords[1];
 	        state.items.push(weapon);
 	        state.map.tiles[coords[0] + "x" + coords[1]].item = state.items.length - 1;
-	        console.log("Added " + weapon.name + " to " + coords[0] + "x" + coords[1]);
 	    });
 	    return state;
 	}
@@ -2251,7 +2250,6 @@
 	    };
 	    state.entities.push(enemy);
 	    state.map.tiles[coords[0] + "x" + coords[1]].entity = state.entities.length - 1;
-	    console.log("Added enemy to tile " + coords[0] + "x" + coords[1]);
 	    return state;
 	}
 	function generateBoss(state) {
@@ -2266,7 +2264,6 @@
 	    };
 	    state.entities.push(boss);
 	    state.map.tiles[coords[0] + "x" + coords[1]].entity = state.entities.length - 1;
-	    console.log("Added boss to tile " + coords[0] + "x" + coords[1]);
 	    return state;
 	}
 	function getRandomEmptyTile(state) {
@@ -2368,7 +2365,6 @@
 	        var minSize = 10;
 	        // Occasionaly, we want to leave a huge area, but nothing larger than the minimum size * 5
 	        if (zone.width < minSize * 3 && zone.height < minSize * 3 && Math.random() >= 0.925) {
-	            console.log("Creating a UUUUGE room!");
 	            return [zone];
 	        }
 	        // Randomly choose split orientation 
