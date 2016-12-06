@@ -2677,6 +2677,10 @@
 	        this.componentDidMount = this.componentDidMount.bind(this);
 	        this.componentWillUnmount = this.componentWillUnmount.bind(this);
 	        this.handleInput = this.handleInput.bind(this);
+	        this.beginSwipe = this.beginSwipe.bind(this);
+	        this.endSwipe = this.endSwipe.bind(this);
+	        this.cancelSwipe = this.cancelSwipe.bind(this);
+	        this.myTouchList = [];
 	    }
 	    Display.prototype.getCell = function (x, y) {
 	        var tile = this.props.tiles[x + "x" + y];
@@ -2707,9 +2711,66 @@
 	    };
 	    Display.prototype.componentDidMount = function () {
 	        window.addEventListener('keypress', this.handleInput);
+	        window.addEventListener('touchstart', this.beginSwipe);
+	        window.addEventListener('touchend', this.endSwipe);
+	        window.addEventListener('touchcancel', this.cancelSwipe);
 	    };
 	    Display.prototype.componentWillUnmount = function () {
 	        window.removeEventListener('keypress', this.handleInput);
+	        window.removeEventListener('touchstart', this.beginSwipe);
+	        window.removeEventListener('touchend', this.endSwipe);
+	        window.removeEventListener('touchcancel', this.cancelSwipe);
+	    };
+	    Display.prototype.beginSwipe = function (e) {
+	        for (var i = 0; i < e.changedTouches.length; i++) {
+	            this.myTouchList.push({
+	                id: e.changedTouches[i].identifier,
+	                x: e.changedTouches[i].pageX,
+	                y: e.changedTouches[i].pageY
+	            });
+	        }
+	    };
+	    Display.prototype.endSwipe = function (e) {
+	        var _this = this;
+	        var _loop_1 = function(i) {
+	            this_1.myTouchList.forEach(function (touch) {
+	                if (touch.id == e.changedTouches[i].identifier) {
+	                    var dx = Math.floor(e.changedTouches[i].pageX - touch.x);
+	                    var dy = Math.floor(e.changedTouches[i].pageY - touch.y);
+	                    if (Math.abs(dx) > Math.abs(dy)) {
+	                        if (dx < 0) {
+	                            _this.props.moveLeft();
+	                        }
+	                        else if (dx > 0) {
+	                            _this.props.moveRight();
+	                        }
+	                    }
+	                    else if (Math.abs(dy) > Math.abs(dx)) {
+	                        if (dy < 0) {
+	                            _this.props.moveUp();
+	                        }
+	                        else if (dy > 0) {
+	                            _this.props.moveDown();
+	                        }
+	                    }
+	                }
+	            });
+	            // Delete touch origin
+	            this_1.myTouchList = this_1.myTouchList.filter(function (touch) { return touch.id !== e.changedTouches[i].identifier; });
+	        };
+	        var this_1 = this;
+	        for (var i = 0; i < e.changedTouches.length; i++) {
+	            _loop_1(i);
+	        }
+	    };
+	    Display.prototype.cancelSwipe = function (e) {
+	        var _loop_2 = function(i) {
+	            this_2.myTouchList = this_2.myTouchList.filter(function (touch) { return touch.id !== e.changedTouches[i].identifier; });
+	        };
+	        var this_2 = this;
+	        for (var i = 0; i < e.changedTouches.length; i++) {
+	            _loop_2(i);
+	        }
 	    };
 	    Display.prototype.handleInput = function (e) {
 	        e.preventDefault();

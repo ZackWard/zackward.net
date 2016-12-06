@@ -11,6 +11,12 @@ interface TileList {
     }
 }
 
+interface myTouch {
+    id: number,
+    x: number,
+    y: number
+}
+
 export interface DisplayProps {
     rows: number,
     columns: number,
@@ -28,7 +34,7 @@ export interface DisplayState {
 
 export class Display extends React.Component<DisplayProps, DisplayState> {
 
-    tileAtlas: any;
+    myTouchList: myTouch[];
 
     constructor(props: DisplayProps) {
         super(props);
@@ -38,6 +44,11 @@ export class Display extends React.Component<DisplayProps, DisplayState> {
         this.componentDidMount = this.componentDidMount.bind(this);
         this.componentWillUnmount = this.componentWillUnmount.bind(this);
         this.handleInput = this.handleInput.bind(this);
+        this.beginSwipe = this.beginSwipe.bind(this);
+        this.endSwipe = this.endSwipe.bind(this);
+        this.cancelSwipe = this.cancelSwipe.bind(this);
+
+        this.myTouchList = [];
     }
 
     getCell(x:number, y:number) {
@@ -93,10 +104,59 @@ export class Display extends React.Component<DisplayProps, DisplayState> {
 
     componentDidMount() {
         window.addEventListener('keypress', this.handleInput);
+        window.addEventListener('touchstart', this.beginSwipe);
+        window.addEventListener('touchend', this.endSwipe);
+        window.addEventListener('touchcancel', this.cancelSwipe);
     }
 
     componentWillUnmount() {
         window.removeEventListener('keypress', this.handleInput);
+        window.removeEventListener('touchstart', this.beginSwipe);
+        window.removeEventListener('touchend', this.endSwipe);
+        window.removeEventListener('touchcancel', this.cancelSwipe);
+    }
+
+    beginSwipe(e: TouchEvent) {
+        for (let i: number = 0; i < e.changedTouches.length; i++) {
+            this.myTouchList.push({
+                id: e.changedTouches[i].identifier,
+                x: e.changedTouches[i].pageX,
+                y: e.changedTouches[i].pageY
+            });
+        }
+    }
+
+    endSwipe(e: TouchEvent) {
+        for (let i: number = 0; i < e.changedTouches.length; i++) {
+            this.myTouchList.forEach((touch) => {
+                if (touch.id == e.changedTouches[i].identifier) {
+                    let dx: number = Math.floor(e.changedTouches[i].pageX - touch.x);
+                    let dy: number = Math.floor(e.changedTouches[i].pageY - touch.y);
+                    if (Math.abs(dx) > Math.abs(dy)) {
+                        if (dx < 0) {
+                            this.props.moveLeft();
+                        } else if (dx > 0) {
+                            this.props.moveRight();
+                        }
+                    } else if (Math.abs(dy) > Math.abs(dx)) {
+                        if (dy < 0) {
+                            this.props.moveUp();
+                        } else if (dy > 0) {
+                            this.props.moveDown();
+                        }
+                    }
+                }
+            });
+
+            // Delete touch origin
+            this.myTouchList = this.myTouchList.filter(touch => touch.id !== e.changedTouches[i].identifier);
+        }
+    }
+
+    cancelSwipe(e: TouchEvent) {
+        for (let i: number = 0; i < e.changedTouches.length; i++) {
+            this.myTouchList = this.myTouchList.filter(touch => touch.id !== e.changedTouches[i].identifier);
+        }
     }
 
     handleInput(e: KeyboardEvent) {
