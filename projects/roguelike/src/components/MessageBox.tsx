@@ -12,7 +12,7 @@ export const MessageBox = (props: MessageBoxProps) => {
     messages.reverse();
 
     return (
-        <div>
+        <div id="message-box">
             <ul id="messages">
                 {messages}
             </ul>

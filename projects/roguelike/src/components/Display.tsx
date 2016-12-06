@@ -94,11 +94,14 @@ export class Display extends React.Component<DisplayProps, DisplayState> {
         }
 
         return (
-            <table id="roguelike-display">
-                <tbody>
-                    {rows}
-                </tbody>
-            </table>
+            <div>
+                <table id="roguelike-display">
+                    <tbody>
+                        {rows}
+                    </tbody>
+                </table>
+                <p className="text-center"><small>Use <kbd>A</kbd>, <kbd>S</kbd>, <kbd>D</kbd>, <kbd>W</kbd> to navigate with keyboard, or swipe to move on mobile.</small></p>
+            </div>
         );
     }
 

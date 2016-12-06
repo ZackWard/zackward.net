@@ -2561,7 +2561,6 @@
 	var MessageBoxContainer_1 = __webpack_require__(33);
 	var DisplayContainer_1 = __webpack_require__(35);
 	var StatusDisplayContainer_1 = __webpack_require__(37);
-	var DPadContainer_1 = __webpack_require__(39);
 	var Roguelike = (function (_super) {
 	    __extends(Roguelike, _super);
 	    function Roguelike(props) {
@@ -2569,7 +2568,7 @@
 	        // Pre-bind methods
 	    }
 	    Roguelike.prototype.render = function () {
-	        return (React.createElement("div", {className: "roguelike"}, React.createElement("div", {className: "container"}, React.createElement("div", {className: "row"}, React.createElement("div", {className: "col-xs-12 col-sm-6"}, React.createElement(DisplayContainer_1.DisplayContainer, null)), React.createElement("div", {className: "col-xs-12 col-sm-6"}, React.createElement(DPadContainer_1.DPadContainer, null))), React.createElement("div", {className: "row"}, React.createElement("div", {className: "col-xs-12 col-sm-6"}, React.createElement(StatusDisplayContainer_1.StatusDisplayContainer, null)), React.createElement("div", {className: "col-xs-12 col-sm-6"}, React.createElement(MessageBoxContainer_1.MessageBoxContainer, null))))));
+	        return (React.createElement("div", {className: "roguelike"}, React.createElement("div", {className: "container"}, React.createElement("div", {className: "row"}, React.createElement("div", {className: "col-xs-12 col-sm-6"}, React.createElement(DisplayContainer_1.DisplayContainer, null)), React.createElement("div", {className: "col-xs-12 col-sm-6"}, React.createElement(StatusDisplayContainer_1.StatusDisplayContainer, null), React.createElement(MessageBoxContainer_1.MessageBoxContainer, null))))));
 	    };
 	    return Roguelike;
 	}(React.Component));
@@ -2603,7 +2602,7 @@
 	        return (React.createElement("li", {key: messageId++}, message));
 	    });
 	    messages.reverse();
-	    return (React.createElement("div", null, React.createElement("ul", {id: "messages"}, messages)));
+	    return (React.createElement("div", {id: "message-box"}, React.createElement("ul", {id: "messages"}, messages)));
 	};
 
 
@@ -2707,7 +2706,7 @@
 	        for (var i = 0; i < this.props.rows; i++) {
 	            rows.push(this.getRow(i));
 	        }
-	        return (React.createElement("table", {id: "roguelike-display"}, React.createElement("tbody", null, rows)));
+	        return (React.createElement("div", null, React.createElement("table", {id: "roguelike-display"}, React.createElement("tbody", null, rows)), React.createElement("p", {className: "text-center"}, React.createElement("small", null, "Use ", React.createElement("kbd", null, "A"), ", ", React.createElement("kbd", null, "S"), ", ", React.createElement("kbd", null, "D"), ", ", React.createElement("kbd", null, "W"), " to navigate with keyboard, or swipe to move on mobile."))));
 	    };
 	    Display.prototype.componentDidMount = function () {
 	        window.addEventListener('keypress', this.handleInput);
@@ -2890,37 +2889,7 @@
 	    if (props.medicines > 0) {
 	        medicine = React.createElement("p", null, "You're carrying ", props.medicines, " bottles of medicine. ", React.createElement("a", {href: "#", onClick: function () { props.useMedicine(props.medicineID); }}, "(use medicine)"));
 	    }
-	    return (React.createElement("div", {className: "text-center"}, React.createElement("p", null, "You are level ", props.level, ". (", props.exp, " / ", props.level * 30, " exp to next level)"), React.createElement("p", null, "You have ", props.hp, " out of 100 health."), React.createElement("p", null, "You're using ", props.weapon, "."), medicine, enemies));
-	};
-
-
-/***/ },
-/* 39 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var react_redux_1 = __webpack_require__(19);
-	var DPad_1 = __webpack_require__(40);
-	var actions_1 = __webpack_require__(29);
-	var mapDispatchToProps = function (dispatch) {
-	    return {
-	        onUp: function () { dispatch(actions_1.moveUp()); },
-	        onDown: function () { dispatch(actions_1.moveDown()); },
-	        onLeft: function () { dispatch(actions_1.moveLeft()); },
-	        onRight: function () { dispatch(actions_1.moveRight()); },
-	    };
-	};
-	exports.DPadContainer = react_redux_1.connect(null, mapDispatchToProps)(DPad_1.DPad);
-
-
-/***/ },
-/* 40 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var React = __webpack_require__(1);
-	exports.DPad = function (props) {
-	    return (React.createElement("div", {id: "d-pad"}, React.createElement("div", {id: "d-pad-top"}, React.createElement("button", {className: "d-pad-button", onClick: props.onUp}, React.createElement("i", {className: "fa fa-arrow-up", "aria-hidden": "true"})), React.createElement("br", null)), React.createElement("div", {id: "d-pad-bottom"}, React.createElement("button", {className: "d-pad-button", onClick: props.onLeft}, React.createElement("i", {className: "fa fa-arrow-left", "aria-hidden": "true"})), React.createElement("button", {className: "d-pad-button", onClick: props.onDown}, React.createElement("i", {className: "fa fa-arrow-down", "aria-hidden": "true"})), React.createElement("button", {className: "d-pad-button", onClick: props.onRight}, React.createElement("i", {className: "fa fa-arrow-right", "aria-hidden": "true"})))));
+	    return (React.createElement("div", {id: "status-box", className: "text-center"}, React.createElement("p", null, "You are level ", props.level, ". (", props.exp, " / ", props.level * 30, " exp to next level)"), React.createElement("p", null, "You have ", props.hp, " out of 100 health."), React.createElement("p", null, "You're using ", props.weapon, "."), medicine, enemies));
 	};
 
 

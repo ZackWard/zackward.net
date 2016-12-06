@@ -59,7 +59,7 @@ export const StatusDisplay = (props: StatusDisplayProps) => {
     }
 
     return (
-        <div className="text-center">
+        <div id="status-box" className="text-center">
             <p>You are level {props.level}. ({props.exp} / {props.level * 30} exp to next level)</p>
             <p>You have {props.hp} out of 100 health.</p>
             <p>You're using {props.weapon}.</p>
