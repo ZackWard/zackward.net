@@ -46,6 +46,7 @@ export class Display extends React.Component<DisplayProps, DisplayState> {
         this.handleInput = this.handleInput.bind(this);
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.beginSwipe = this.beginSwipe.bind(this);
+        this.handleSwipe = this.handleSwipe.bind(this);
         this.endSwipe = this.endSwipe.bind(this);
         this.cancelSwipe = this.cancelSwipe.bind(this);
 
@@ -110,6 +111,7 @@ export class Display extends React.Component<DisplayProps, DisplayState> {
         window.addEventListener('keypress', this.handleInput);
         window.addEventListener('keydown', this.handleKeyDown);
         window.addEventListener('touchstart', this.beginSwipe);
+        window.addEventListener('touchmove', this.handleSwipe);
         window.addEventListener('touchend', this.endSwipe);
         window.addEventListener('touchcancel', this.cancelSwipe);
     }
@@ -118,8 +120,19 @@ export class Display extends React.Component<DisplayProps, DisplayState> {
         window.removeEventListener('keypress', this.handleInput);
         window.removeEventListener('keydown', this.handleKeyDown);
         window.removeEventListener('touchstart', this.beginSwipe);
+        window.removeEventListener('touchmove', this.handleSwipe);
         window.removeEventListener('touchend', this.endSwipe);
         window.removeEventListener('touchcancel', this.cancelSwipe);
+    }
+
+    handleSwipe(e: TouchEvent) {
+        for (let i: number = 0; i < e.changedTouches.length; i++) {
+            this.myTouchList.forEach((touch) => {
+                if (touch.id == e.changedTouches[i].identifier) {
+                    e.preventDefault();
+                }
+            });
+        }
     }
 
     beginSwipe(e: TouchEvent) {
@@ -166,7 +179,6 @@ export class Display extends React.Component<DisplayProps, DisplayState> {
     }
 
     handleKeyDown(e: KeyboardEvent) {
-        e.preventDefault();
         switch (e.key) {
             case 'ArrowUp':
                 this.props.moveUp(); 
@@ -185,7 +197,6 @@ export class Display extends React.Component<DisplayProps, DisplayState> {
 
     handleInput(e: KeyboardEvent) {
         e.preventDefault();
-        console.log(e);
         switch (e.key) {
             case 'a': 
                 this.props.moveLeft();

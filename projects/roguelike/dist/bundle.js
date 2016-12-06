@@ -2674,6 +2674,7 @@
 	        this.handleInput = this.handleInput.bind(this);
 	        this.handleKeyDown = this.handleKeyDown.bind(this);
 	        this.beginSwipe = this.beginSwipe.bind(this);
+	        this.handleSwipe = this.handleSwipe.bind(this);
 	        this.endSwipe = this.endSwipe.bind(this);
 	        this.cancelSwipe = this.cancelSwipe.bind(this);
 	        this.myTouchList = [];
@@ -2709,6 +2710,7 @@
 	        window.addEventListener('keypress', this.handleInput);
 	        window.addEventListener('keydown', this.handleKeyDown);
 	        window.addEventListener('touchstart', this.beginSwipe);
+	        window.addEventListener('touchmove', this.handleSwipe);
 	        window.addEventListener('touchend', this.endSwipe);
 	        window.addEventListener('touchcancel', this.cancelSwipe);
 	    };
@@ -2716,8 +2718,22 @@
 	        window.removeEventListener('keypress', this.handleInput);
 	        window.removeEventListener('keydown', this.handleKeyDown);
 	        window.removeEventListener('touchstart', this.beginSwipe);
+	        window.removeEventListener('touchmove', this.handleSwipe);
 	        window.removeEventListener('touchend', this.endSwipe);
 	        window.removeEventListener('touchcancel', this.cancelSwipe);
+	    };
+	    Display.prototype.handleSwipe = function (e) {
+	        var _loop_1 = function(i) {
+	            this_1.myTouchList.forEach(function (touch) {
+	                if (touch.id == e.changedTouches[i].identifier) {
+	                    e.preventDefault();
+	                }
+	            });
+	        };
+	        var this_1 = this;
+	        for (var i = 0; i < e.changedTouches.length; i++) {
+	            _loop_1(i);
+	        }
 	    };
 	    Display.prototype.beginSwipe = function (e) {
 	        for (var i = 0; i < e.changedTouches.length; i++) {
@@ -2730,8 +2746,8 @@
 	    };
 	    Display.prototype.endSwipe = function (e) {
 	        var _this = this;
-	        var _loop_1 = function(i) {
-	            this_1.myTouchList.forEach(function (touch) {
+	        var _loop_2 = function(i) {
+	            this_2.myTouchList.forEach(function (touch) {
 	                if (touch.id == e.changedTouches[i].identifier) {
 	                    var dx = Math.floor(e.changedTouches[i].pageX - touch.x);
 	                    var dy = Math.floor(e.changedTouches[i].pageY - touch.y);
@@ -2754,15 +2770,6 @@
 	                }
 	            });
 	            // Delete touch origin
-	            this_1.myTouchList = this_1.myTouchList.filter(function (touch) { return touch.id !== e.changedTouches[i].identifier; });
-	        };
-	        var this_1 = this;
-	        for (var i = 0; i < e.changedTouches.length; i++) {
-	            _loop_1(i);
-	        }
-	    };
-	    Display.prototype.cancelSwipe = function (e) {
-	        var _loop_2 = function(i) {
 	            this_2.myTouchList = this_2.myTouchList.filter(function (touch) { return touch.id !== e.changedTouches[i].identifier; });
 	        };
 	        var this_2 = this;
@@ -2770,8 +2777,16 @@
 	            _loop_2(i);
 	        }
 	    };
+	    Display.prototype.cancelSwipe = function (e) {
+	        var _loop_3 = function(i) {
+	            this_3.myTouchList = this_3.myTouchList.filter(function (touch) { return touch.id !== e.changedTouches[i].identifier; });
+	        };
+	        var this_3 = this;
+	        for (var i = 0; i < e.changedTouches.length; i++) {
+	            _loop_3(i);
+	        }
+	    };
 	    Display.prototype.handleKeyDown = function (e) {
-	        e.preventDefault();
 	        switch (e.key) {
 	            case 'ArrowUp':
 	                this.props.moveUp();
