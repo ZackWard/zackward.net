@@ -137,6 +137,7 @@ export class Display extends React.Component<DisplayProps, DisplayState> {
 
     beginSwipe(e: TouchEvent) {
         // For each new touch, add the touch the our list of ongoing touches, but only if it originated on a map tile
+        // New comment for new commit
         for (let i: number = 0; i < e.changedTouches.length; i++) {
             if (e.changedTouches[i].target instanceof Element) {
                 let touchedElement: Element = e.changedTouches[i].target as Element;
