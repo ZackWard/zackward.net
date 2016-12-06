@@ -48,21 +48,24 @@ export interface roguelikeState {
     hero: number,
     entities: Entity[],
     items: Item[],
-    status?: {
-        won?: boolean,
-        bumpx?: number,
-        bumpy?: number
+    status: {
+        started: boolean,
+        won: boolean,
+        dead: boolean,
+        deaths: number,
+        bumpx: number,
+        bumpy: number
     }
 }
 
 export function getDefaultState(): roguelikeState {
     
-    let tilemap = new TileMap(100, 100);
+    let tilemap = new TileMap(75, 75);
 
     let defaultState: roguelikeState = {
         map: {
-            width: 100,
-            height: 100,
+            width: 75,
+            height: 75,
             camera: {
                 x: 0,
                 y: 0,
@@ -94,7 +97,14 @@ export function getDefaultState(): roguelikeState {
                 sprite: 38
             }
         ],
-        status: {}
+        status: {
+            started: false,
+            won: false,
+            dead: false,
+            deaths: 0,
+            bumpx: 0,
+            bumpy: 0
+        }
     };
 
     // Please our Hero in the upper left hand corner of the map.

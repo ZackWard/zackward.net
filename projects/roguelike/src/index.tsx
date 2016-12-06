@@ -4,13 +4,13 @@ import * as ReactDOM from "react-dom";
 import {createStore} from "redux";
 import {Provider} from "react-redux";
 import {reducer} from "./reducer";
-import {Roguelike} from "./components/Roguelike";
+import {RoguelikeContainer} from "./containers/RoguelikeContainer";
 
 let store = createStore(reducer);
 
 ReactDOM.render(
     <Provider store={store}>
-        <Roguelike />
+        <RoguelikeContainer />
     </Provider>,
     document.getElementById('app')
 );

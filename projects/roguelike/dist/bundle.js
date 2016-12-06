@@ -50,9 +50,9 @@
 	var redux_1 = __webpack_require__(3);
 	var react_redux_1 = __webpack_require__(19);
 	var reducer_1 = __webpack_require__(28);
-	var Roguelike_1 = __webpack_require__(32);
+	var RoguelikeContainer_1 = __webpack_require__(32);
 	var store = redux_1.createStore(reducer_1.reducer);
-	ReactDOM.render(React.createElement(react_redux_1.Provider, {store: store}, React.createElement(Roguelike_1.Roguelike, null)), document.getElementById('app'));
+	ReactDOM.render(React.createElement(react_redux_1.Provider, {store: store}, React.createElement(RoguelikeContainer_1.RoguelikeContainer, null)), document.getElementById('app'));
 
 
 /***/ },
@@ -1986,7 +1986,8 @@
 	    }
 	    // Check to see if player is dead
 	    if (state.entities[state.hero].hp < 1) {
-	        state = MapGenerator_1.getDefaultState();
+	        state.status.dead = true;
+	        state.status.deaths++;
 	        state.messages = ["You were killed. You decide to try again."];
 	    }
 	    return state;
@@ -2042,6 +2043,15 @@
 	    }
 	    return state;
 	}
+	function newGame(state) {
+	    if (state.status.started && state.status.dead) {
+	        var deaths = state.status.deaths;
+	        state = MapGenerator_1.getDefaultState();
+	        state.status.deaths = deaths;
+	    }
+	    state.status.started = true;
+	    return state;
+	}
 	// This reducer handles all of our game logic and manages all app state
 	function reducer(state, action) {
 	    if (state === void 0) { state = MapGenerator_1.getDefaultState(); }
@@ -2062,6 +2072,10 @@
 	            break;
 	        case actions_1.USE_ITEM:
 	            newState = useItem(newState, action.item);
+	            break;
+	        case actions_1.NEW_GAME:
+	            newState = newGame(newState);
+	            break;
 	    }
 	    return newState;
 	}
@@ -2078,6 +2092,7 @@
 	exports.MOVE_LEFT = 'MOVE_LEFT';
 	exports.MOVE_RIGHT = 'MOVE_RIGHT';
 	exports.USE_ITEM = 'USE_ITEM';
+	exports.NEW_GAME = 'NEW_GAME';
 	function moveUp() {
 	    return {
 	        type: exports.MOVE_UP,
@@ -2109,6 +2124,12 @@
 	    };
 	}
 	exports.useItem = useItem;
+	function startNewGame() {
+	    return {
+	        type: exports.NEW_GAME
+	    };
+	}
+	exports.startNewGame = startNewGame;
 
 
 /***/ },
@@ -2118,11 +2139,11 @@
 	"use strict";
 	var TileMap_1 = __webpack_require__(31);
 	function getDefaultState() {
-	    var tilemap = new TileMap_1.TileMap(100, 100);
+	    var tilemap = new TileMap_1.TileMap(75, 75);
 	    var defaultState = {
 	        map: {
-	            width: 100,
-	            height: 100,
+	            width: 75,
+	            height: 75,
 	            camera: {
 	                x: 0,
 	                y: 0,
@@ -2154,7 +2175,14 @@
 	                sprite: 38
 	            }
 	        ],
-	        status: {}
+	        status: {
+	            started: false,
+	            won: false,
+	            dead: false,
+	            deaths: 0,
+	            bumpx: 0,
+	            bumpy: 0
+	        }
 	    };
 	    // Please our Hero in the upper left hand corner of the map.
 	    var heroLocation = "1x1";
@@ -2548,27 +2576,23 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var React = __webpack_require__(1);
-	var MessageBoxContainer_1 = __webpack_require__(33);
-	var DisplayContainer_1 = __webpack_require__(35);
-	var StatusDisplayContainer_1 = __webpack_require__(37);
-	var Roguelike = (function (_super) {
-	    __extends(Roguelike, _super);
-	    function Roguelike(props) {
-	        _super.call(this, props);
-	        // Pre-bind methods
-	    }
-	    Roguelike.prototype.render = function () {
-	        return (React.createElement("div", {className: "roguelike"}, React.createElement("div", {className: "container"}, React.createElement("div", {className: "row"}, React.createElement("div", {className: "col-xs-12 col-sm-6"}, React.createElement(DisplayContainer_1.DisplayContainer, null)), React.createElement("div", {className: "col-xs-12 col-sm-6"}, React.createElement(StatusDisplayContainer_1.StatusDisplayContainer, null), React.createElement(MessageBoxContainer_1.MessageBoxContainer, null))))));
+	var react_redux_1 = __webpack_require__(19);
+	var Roguelike_1 = __webpack_require__(33);
+	var actions_1 = __webpack_require__(29);
+	var mapStateToProps = function (state) {
+	    return {
+	        started: state.status.started,
+	        won: state.status.won,
+	        dead: state.status.dead,
+	        deaths: state.status.deaths
 	    };
-	    return Roguelike;
-	}(React.Component));
-	exports.Roguelike = Roguelike;
+	};
+	var mapDispatchToProps = function (dispatch) {
+	    return {
+	        startNewGame: function () { dispatch(actions_1.startNewGame()); }
+	    };
+	};
+	exports.RoguelikeContainer = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(Roguelike_1.Roguelike);
 
 
 /***/ },
@@ -2576,8 +2600,35 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var React = __webpack_require__(1);
+	var MessageBoxContainer_1 = __webpack_require__(34);
+	var DisplayContainer_1 = __webpack_require__(36);
+	var StatusDisplayContainer_1 = __webpack_require__(38);
+	exports.Roguelike = function (props) {
+	    var screen = React.createElement("div", null);
+	    if (!props.started) {
+	        screen = (React.createElement("div", {className: "row"}, React.createElement("div", {className: "col-xs-12 text-center game-dialog"}, React.createElement("p", null, "You are a ninja. Eliminate \"The Boss\"."), React.createElement("button", {onClick: props.startNewGame}, "Start"))));
+	    }
+	    if (props.started && !props.dead) {
+	        screen = (React.createElement("div", {className: "row"}, React.createElement("div", {className: "col-xs-12 col-sm-6"}, React.createElement(DisplayContainer_1.DisplayContainer, null)), React.createElement("div", {className: "col-xs-12 col-sm-6"}, React.createElement(StatusDisplayContainer_1.StatusDisplayContainer, null), React.createElement(MessageBoxContainer_1.MessageBoxContainer, null))));
+	    }
+	    if (props.dead) {
+	        screen = (React.createElement("div", {className: "row"}, React.createElement("div", {className: "col-xs-12 text-center game-dialog"}, React.createElement("p", null, "You're dead! You've died ", props.deaths, " times."), React.createElement("button", {onClick: props.startNewGame}, "Try again"))));
+	    }
+	    if (props.won) {
+	        screen = (React.createElement("div", {className: "row"}, React.createElement("div", {className: "col-xs-12 text-center game-dialog"}, React.createElement("p", null, "You've defeated The Boss. Nice work!"))));
+	    }
+	    return (React.createElement("div", {className: "roguelike"}, React.createElement("div", {className: "container"}, screen)));
+	};
+
+
+/***/ },
+/* 34 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
 	var react_redux_1 = __webpack_require__(19);
-	var MessageBox_1 = __webpack_require__(34);
+	var MessageBox_1 = __webpack_require__(35);
 	var mapStateToProps = function (state) {
 	    return {
 	        messageList: state.messages.slice(-8)
@@ -2587,7 +2638,7 @@
 
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2603,13 +2654,13 @@
 
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var actions_1 = __webpack_require__(29);
 	var react_redux_1 = __webpack_require__(19);
-	var Display_1 = __webpack_require__(36);
+	var Display_1 = __webpack_require__(37);
 	var mapStateToProps = function (state) {
 	    // We only need to pass the visible tiles to the display component
 	    var visibleTiles = {};
@@ -2653,7 +2704,7 @@
 
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2737,6 +2788,7 @@
 	    };
 	    Display.prototype.beginSwipe = function (e) {
 	        // For each new touch, add the touch the our list of ongoing touches, but only if it originated on a map tile
+	        // New comment for new commit
 	        for (var i = 0; i < e.changedTouches.length; i++) {
 	            if (e.changedTouches[i].target instanceof Element) {
 	                var touchedElement = e.changedTouches[i].target;
@@ -2841,12 +2893,12 @@
 
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var react_redux_1 = __webpack_require__(19);
-	var StatusDisplay_1 = __webpack_require__(38);
+	var StatusDisplay_1 = __webpack_require__(39);
 	var actions_1 = __webpack_require__(29);
 	var mapStateToProps = function (state) {
 	    var hero = state.entities[state.hero];
@@ -2895,7 +2947,7 @@
 
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";

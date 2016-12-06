@@ -1,4 +1,4 @@
-import {MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, USE_ITEM} from "./actions";
+import {MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, USE_ITEM, NEW_GAME} from "./actions";
 import {getDefaultState, roguelikeState, Entity} from "./MapGenerator";
 
 
@@ -142,7 +142,8 @@ function handleEncounter(state: roguelikeState, targetEntity: number): roguelike
 
     // Check to see if player is dead
     if (state.entities[state.hero].hp < 1) {
-        state = getDefaultState();
+        state.status.dead = true;
+        state.status.deaths++;
         state.messages = ["You were killed. You decide to try again."];
     }
 
@@ -213,6 +214,17 @@ function useItem(state: roguelikeState, item: number): roguelikeState {
     return state;
 }
 
+function newGame(state: roguelikeState): roguelikeState {
+    if (state.status.started && state.status.dead) {
+        let deaths: number = state.status.deaths;
+        state = getDefaultState();
+        state.status.deaths = deaths;
+    }
+
+    state.status.started = true;
+    return state;
+}
+
 // This reducer handles all of our game logic and manages all app state
 export function reducer(state = getDefaultState(), action: any) {
     
@@ -234,6 +246,10 @@ export function reducer(state = getDefaultState(), action: any) {
             break;
         case USE_ITEM: 
             newState = useItem(newState, action.item);
+            break;
+        case NEW_GAME:
+            newState = newGame(newState);
+            break;
     }
     return newState;
 }

@@ -3,6 +3,7 @@ export const MOVE_DOWN = 'MOVE_DOWN';
 export const MOVE_LEFT = 'MOVE_LEFT';
 export const MOVE_RIGHT = 'MOVE_RIGHT';
 export const USE_ITEM = 'USE_ITEM';
+export const NEW_GAME = 'NEW_GAME';
 
 export function moveUp() {
     return {
@@ -32,5 +33,11 @@ export function useItem(item: number) {
     return {
         type: USE_ITEM,
         item: item
+    };
+}
+
+export function startNewGame() {
+    return {
+        type: NEW_GAME
     };
 }
