@@ -2736,12 +2736,24 @@
 	        }
 	    };
 	    Display.prototype.beginSwipe = function (e) {
+	        // For each new touch, add the touch the our list of ongoing touches, but only if it originated on a map tile
 	        for (var i = 0; i < e.changedTouches.length; i++) {
-	            this.myTouchList.push({
-	                id: e.changedTouches[i].identifier,
-	                x: e.changedTouches[i].pageX,
-	                y: e.changedTouches[i].pageY
-	            });
+	            if (e.changedTouches[i].target instanceof Element) {
+	                var touchedElement = e.changedTouches[i].target;
+	                var touchedTile = false;
+	                for (var j = 0; j < touchedElement.classList.length; j++) {
+	                    if (touchedElement.classList[j] == "tile") {
+	                        touchedTile = true;
+	                    }
+	                }
+	                if (touchedTile) {
+	                    this.myTouchList.push({
+	                        id: e.changedTouches[i].identifier,
+	                        x: e.changedTouches[i].pageX,
+	                        y: e.changedTouches[i].pageY
+	                    });
+	                }
+	            }
 	        }
 	    };
 	    Display.prototype.endSwipe = function (e) {
