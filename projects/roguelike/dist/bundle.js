@@ -2800,11 +2800,12 @@
 	            case 'ArrowRight':
 	                this.props.moveRight();
 	                break;
+	            default:
+	                break;
 	        }
 	    };
 	    Display.prototype.handleInput = function (e) {
 	        e.preventDefault();
-	        console.log(e);
 	        switch (e.key) {
 	            case 'a':
 	                this.props.moveLeft();
@@ -2817,6 +2818,8 @@
 	                break;
 	            case 'w':
 	                this.props.moveUp();
+	                break;
+	            default:
 	                break;
 	        }
 	    };

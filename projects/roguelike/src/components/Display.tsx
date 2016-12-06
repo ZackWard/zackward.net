@@ -192,6 +192,8 @@ export class Display extends React.Component<DisplayProps, DisplayState> {
             case 'ArrowRight': 
                 this.props.moveRight();
                 break;
+            default: 
+                break;
         }
     }
 
@@ -209,6 +211,8 @@ export class Display extends React.Component<DisplayProps, DisplayState> {
                 break;
             case 'w': 
                 this.props.moveUp();
+                break;
+            default: 
                 break;
         }
     }
