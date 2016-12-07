@@ -18,14 +18,15 @@ interface myTouch {
 }
 
 export interface DisplayProps {
-    rows: number,
-    columns: number,
-    tiles: TileList,
-    moveUp: () => void,
-    moveDown: () => void,
-    moveLeft: () => void,
-    moveRight: () => void
-
+    rows: number;
+    columns: number;
+    tiles: TileList;
+    defaultHealingItem?: number;
+    moveUp: () => void;
+    moveDown: () => void;
+    moveLeft: () => void;
+    moveRight: () => void;
+    useHealingItem: (itemID: number) => void;
 }
 
 export interface DisplayState {
@@ -102,7 +103,9 @@ export class Display extends React.Component<DisplayProps, DisplayState> {
                         {rows}
                     </tbody>
                 </table>
-                <p className="text-center"><small>Use the arrow keys, or <kbd>A</kbd>, <kbd>S</kbd>, <kbd>D</kbd>, <kbd>W</kbd> to navigate with keyboard, or swipe to move on mobile.</small></p>
+                <p className="text-center"><small>Use the arrow keys, or <kbd>A</kbd>, <kbd>S</kbd>, <kbd>D</kbd>, <kbd>W</kbd> to navigate with keyboard.<br />
+                 Use <kbd>m</kbd> to apply any medicine that you may have.<br />
+                Swipe to move on mobile.</small></p>
             </div>
         );
     }
@@ -224,6 +227,11 @@ export class Display extends React.Component<DisplayProps, DisplayState> {
                 break;
             case 'w': 
                 this.props.moveUp();
+                break;
+            case 'm':
+                if (this.props.defaultHealingItem !== undefined && typeof this.props.defaultHealingItem == 'number') {
+                    this.props.useHealingItem(this.props.defaultHealingItem);
+                }  
                 break;
             default: 
                 break;

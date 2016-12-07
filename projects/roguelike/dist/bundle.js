@@ -2685,18 +2685,25 @@
 	        }
 	        displayY++;
 	    }
-	    return {
+	    var displayProps = {
 	        tiles: visibleTiles,
 	        rows: state.map.camera.height,
-	        columns: state.map.camera.width
+	        columns: state.map.camera.width,
 	    };
+	    // If the player has any medicine in inventory, pass it as the defaultHealingItem, so it can be used in a keyboard shortcut
+	    var healingItems = state.entities[state.hero].inventory.filter(function (itemID) { return state.items[itemID].type == "healing"; });
+	    if (healingItems.length > 0) {
+	        displayProps.defaultHealingItem = healingItems[0];
+	    }
+	    return displayProps;
 	};
 	var mapDispatchToProps = function (dispatch) {
 	    return {
 	        moveUp: function () { dispatch(actions_1.moveUp()); },
 	        moveDown: function () { dispatch(actions_1.moveDown()); },
 	        moveLeft: function () { dispatch(actions_1.moveLeft()); },
-	        moveRight: function () { dispatch(actions_1.moveRight()); }
+	        moveRight: function () { dispatch(actions_1.moveRight()); },
+	        useHealingItem: function (item) { dispatch(actions_1.useItem(item)); }
 	    };
 	};
 	// TODO "Display as any" should be correctly typed
@@ -2755,7 +2762,7 @@
 	        for (var i = 0; i < this.props.rows; i++) {
 	            rows.push(this.getRow(i));
 	        }
-	        return (React.createElement("div", null, React.createElement("table", {id: "roguelike-display"}, React.createElement("tbody", null, rows)), React.createElement("p", {className: "text-center"}, React.createElement("small", null, "Use the arrow keys, or ", React.createElement("kbd", null, "A"), ", ", React.createElement("kbd", null, "S"), ", ", React.createElement("kbd", null, "D"), ", ", React.createElement("kbd", null, "W"), " to navigate with keyboard, or swipe to move on mobile."))));
+	        return (React.createElement("div", null, React.createElement("table", {id: "roguelike-display"}, React.createElement("tbody", null, rows)), React.createElement("p", {className: "text-center"}, React.createElement("small", null, "Use the arrow keys, or ", React.createElement("kbd", null, "A"), ", ", React.createElement("kbd", null, "S"), ", ", React.createElement("kbd", null, "D"), ", ", React.createElement("kbd", null, "W"), " to navigate with keyboard.", React.createElement("br", null), "Use ", React.createElement("kbd", null, "m"), " to apply any medicine that you may have.", React.createElement("br", null), "Swipe to move on mobile."))));
 	    };
 	    Display.prototype.componentDidMount = function () {
 	        window.addEventListener('keypress', this.handleInput);
@@ -2882,6 +2889,11 @@
 	                break;
 	            case 'w':
 	                this.props.moveUp();
+	                break;
+	            case 'm':
+	                if (this.props.defaultHealingItem !== undefined && typeof this.props.defaultHealingItem == 'number') {
+	                    this.props.useHealingItem(this.props.defaultHealingItem);
+	                }
 	                break;
 	            default:
 	                break;

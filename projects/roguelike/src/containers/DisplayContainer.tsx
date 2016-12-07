@@ -1,4 +1,4 @@
-import {moveUp, moveDown, moveLeft, moveRight} from "../actions";
+import {moveUp, moveDown, moveLeft, moveRight, useItem} from "../actions";
 import {connect} from "react-redux";
 import {Display} from "../components/Display";
 import {roguelikeState} from "../MapGenerator";
@@ -30,11 +30,19 @@ const mapStateToProps = (state: roguelikeState) => {
         displayY++;
     }
 
-    return {
+    let displayProps: any = {
         tiles: visibleTiles,
         rows: state.map.camera.height,
-        columns: state.map.camera.width
+        columns: state.map.camera.width,
     };
+
+    // If the player has any medicine in inventory, pass it as the defaultHealingItem, so it can be used in a keyboard shortcut
+    let healingItems: number[] = state.entities[state.hero].inventory.filter(itemID => state.items[itemID].type == "healing");
+    if (healingItems.length > 0) {
+        displayProps.defaultHealingItem = healingItems[0];
+    }
+
+    return displayProps;
 };
 
 const mapDispatchToProps = (dispatch: any) => {
@@ -42,7 +50,8 @@ const mapDispatchToProps = (dispatch: any) => {
         moveUp: () => {dispatch(moveUp());},
         moveDown: () => {dispatch(moveDown());},
         moveLeft: () => {dispatch(moveLeft());},
-        moveRight: () => {dispatch(moveRight());}
+        moveRight: () => {dispatch(moveRight());},
+        useHealingItem: (item: number) => {dispatch(useItem(item))}
     };
 };
 
