@@ -71,7 +71,7 @@ export const Roguelike = (props: RoguelikeProps) => {
                     <p className="text-muted"><small>Built with React, Redux, and Love by <a href="http://www.zackward.net">Zack Ward</a>. 
                     Modified <a href="http://opengameart.org/content/dawnlike-16x16-universal-rogue-like-tileset-v181">DawnLike</a> tileset used under <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a> license.
                     Palette designed by DawnBringer. 
-                    Source code on <i class="fa fa-github" aria-hidden="true"></i><a href="https://github.com/ZackWard/zackward.github.io/tree/master/projects/roguelike">GitHub.</a></small></p>
+                    Source code on <i className="fa fa-github" aria-hidden="true"></i><a href="https://github.com/ZackWard/zackward.github.io/tree/master/projects/roguelike">GitHub.</a></small></p>
                 </div>
             </footer>
         </div>
