@@ -1,0 +1,18 @@
+{
+  "name": "barchart",
+  "version": "1.0.0",
+  "description": "A Bar Chart for FCC's Data Visualization certification",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Zack Ward",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "ts-loader": "^1.3.0",
+    "typescript": "^2.1.4",
+    "webpack": "^1.14.0"
+  }
+}
