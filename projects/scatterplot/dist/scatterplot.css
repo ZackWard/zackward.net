@@ -25,6 +25,7 @@
     left: 0px;
     top: 0px;
     display: none;
+    padding: 5px;
     width: 150px;
     color: white;
     font-size: 1.2em;
@@ -33,4 +34,10 @@
     opacity: .9;
     border-radius: 5px;
     border: 0px;
+}
+
+.legend rect {
+    fill: white;
+    stroke: black;
+    stroke-width: 1;
 }

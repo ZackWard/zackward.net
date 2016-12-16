@@ -15,8 +15,8 @@ let exampleData = {
     year: 2004,
     age: 18,
     sex: 1,
-    totalMinutes: 6999,
-    individuals: 50
+    minutes: 6999,
+    avgWeeklyEarnings: 1000
 };
 
 let testGroup = [];
@@ -27,22 +27,19 @@ var parser = parse({columns: true});
 parser.on('readable', function () {
     var record;
     while (record = parser.read()) {
-        // if (record.t120307 !== '0') {
-            var dataIndex = record.tuyear + "-" + record.teage + "-" + record.tesex;
-            if (results[dataIndex] == undefined) {
-                results[dataIndex] = {
-                    year: parseInt(record.tuyear),
-                    age: parseInt(record.teage),
-                    sex: (record.tesex == '1') ? "M" : "F",
-                    totalMinutes: parseInt(record.t120307),
-                    individuals: 1
-                };
-            } else {
-                results[dataIndex].totalMinutes = results[dataIndex].totalMinutes + parseInt(record.t120307);
-                results[dataIndex].individuals++;
-            }
+        var dataIndex = record.tuyear + "-" + record.teage + "-" + record.tesex;
+        if (results[dataIndex] == undefined) {
+            results[dataIndex] = [];
+        }
+        results[dataIndex].push({
+                year: parseInt(record.tuyear),
+                age: parseInt(record.teage),
+                sex: (record.tesex == '1') ? "M" : "F",
+                minutes: parseInt(record.t120307),
+                weight: parseInt(record.tufnwgtp),
+                weeklyEarnings: parseInt(record.trernwa)
+        });
 
-        // }
     }
 });
 
@@ -57,9 +54,27 @@ parser.on('finish', function () {
 
     var keys = Object.keys(results);
     for (var i = 0; i < keys.length; i++) {
-        results[keys[i]].averageMinutes = Math.round(results[keys[i]].totalMinutes / results[keys[i]].individuals);
-        jsonResults.data.push(results[keys[i]]);
+        console.log(results[keys[i]]);
+        // Calculate weighted results here
+        var accMinutes = 0,
+            accWeight = 0,
+            accEarnings = 0,
+            respondents = results[keys[i]].length;
+        for (var j = 0; j < results[keys[i]].length; j++) {
+            accMinutes = accMinutes + results[keys[i]][j].minutes * results[keys[i]][j].weight;
+            accWeight = accWeight + results[keys[i]][j].weight;
+            accEarnings = accEarnings + (results[keys[i]][j].weeklyEarnings > 0 ? results[keys[i]][j].weeklyEarnings : 0);
+        }
+        jsonResults.data.push({
+            year: results[keys[i]][0].year,
+            age: results[keys[i]][0].age,
+            sex: results[keys[i]][0].sex,
+            minutes: Math.round(accMinutes / accWeight),
+            avgWeeklyEarnings: Math.round((accEarnings / respondents) / 100)
+        });
     }
+
+    console.log(jsonResults.data);
 
     // write to file
     var json = JSON.stringify(jsonResults);
@@ -69,11 +84,17 @@ parser.on('finish', function () {
     });
 
     console.log("All done!");
-    console.log(jsonResults.data);
-    console.log("Data points: " + jsonResults.data.length);
-    console.log("Verify data");
-    console.log(testGroup);
-    console.log(results["2010-18-1"]);
+    console.log("Sample data from 2014, 18 yo males:");
+    var testResults = results["2014-18-1"];
+    console.log(testResults);
+
+    var accMinutes = 0, accWeight = 0;
+    for (var i = 0; i < testResults.length; i++) {
+        accMinutes = accMinutes + (testResults[i].minutes * testResults[i].weight);
+        accWeight = accWeight + testResults[i].weight;
+    }
+    var estMinutes = accMinutes / accWeight;
+    console.log("Estimate: " + estMinutes);
 });
 
 

@@ -45,23 +45,46 @@
 /***/ function(module, exports) {
 
 	var margin = {
-	    left: 60,
-	    right: 60,
-	    top: 50,
-	    bottom: 50
+	    left: 75,
+	    right: 75,
+	    top: 75,
+	    bottom: 75
 	};
 	var chartWidth = 1500 - margin.left - margin.right;
 	var chartHeight = 700 - margin.top - margin.bottom;
 	d3.select('.chart')
 	    .attr('width', (chartWidth + margin.left + margin.right) + "px")
 	    .attr('height', (chartHeight + margin.top + margin.bottom) + "px");
-	d3.json('https://dl.dropboxusercontent.com/u/13022985/timeuse2.json', function (error, data) {
+	// We also need a legend 
+	var legendWidth = 200, legendHeight = 100;
+	var legend = d3.select('.chart')
+	    .append('g')
+	    .classed('legend', true)
+	    .attr('transform', 'translate(' + (margin.left + (chartWidth - legendWidth)) + ', ' + (margin.top) + ')');
+	legend.append('rect')
+	    .attr('width', legendWidth)
+	    .attr('height', legendHeight);
+	legend.append('circle')
+	    .attr('r', 5)
+	    .attr('fill', 'purple')
+	    .attr('transform', 'translate(' + (legendWidth / 5) + ', ' + (legendHeight / 3) + ')');
+	legend.append('text')
+	    .text('Female Respondents')
+	    .attr('transform', 'translate(' + ((legendWidth / 5) + 10) + ', ' + ((legendHeight / 3) + 5) + ')');
+	legend.append('circle')
+	    .attr('r', 5)
+	    .attr('fill', 'blue')
+	    .attr('transform', 'translate(' + (legendWidth / 5) + ', ' + ((legendHeight / 3) * 2) + ')');
+	legend.append('text')
+	    .text('Male Respondents')
+	    .attr('transform', 'translate(' + ((legendWidth / 5) + 10) + ', ' + (((legendHeight / 3) * 2) + 5) + ')');
+	d3.json('https://dl.dropboxusercontent.com/u/13022985/timeuse4.json', function (error, data) {
 	    if (error !== null) {
 	        console.log("Error: " + error);
 	    }
 	    // First let's build our scales and axes
-	    var x = d3.scaleTime()
-	        .domain(d3.extent(data.data, function (d) { return new Date(d.year, 0); }))
+	    var x = d3.scaleLinear()
+	        .domain(d3.extent(data.data, function (d) { return d.age; }))
 	        .range([0, chartWidth]);
 	    var xAxis = d3.axisBottom(x);
 	    d3.select('.chart')
@@ -69,10 +92,18 @@
 	        .call(xAxis)
 	        .classed('axis', true)
 	        .attr('transform', 'translate(' + margin.left + ', ' + (margin.top + chartHeight) + ')');
-	    var minMinutes = d3.min(data.data, function (d) { return d.averageMinutes; });
-	    var maxMinutes = d3.max(data.data, function (d) { return d.averageMinutes; });
+	    d3.select('.chart')
+	        .append('g')
+	        .classed('axis', true)
+	        .append('text')
+	        .text('Age')
+	        .attr('fill', '#000')
+	        .attr('text-anchor', 'middle')
+	        .attr('transform', 'translate(' + (margin.left + (chartWidth / 2)) + ', ' + (margin.top + chartHeight + margin.bottom - 20) + ')');
+	    var minEarning = d3.min(data.data, function (d) { return d.avgWeeklyEarnings; });
+	    var maxEarning = d3.max(data.data, function (d) { return d.avgWeeklyEarnings; });
 	    var y = d3.scaleLinear()
-	        .domain([maxMinutes, minMinutes])
+	        .domain([maxEarning, minEarning])
 	        .range([0, chartHeight]);
 	    var yAxis = d3.axisLeft(y);
 	    d3.select('.chart')
@@ -84,12 +115,12 @@
 	        .append('g')
 	        .classed('axis', true)
 	        .append('text')
-	        .text('Minutes spent playing games')
+	        .text('Average Weekly Earnings in USD')
 	        .attr('fill', '#000')
 	        .attr('text-anchor', 'middle')
-	        .attr('transform', 'translate(' + (margin.left / 4) + ', ' + (margin.top + (chartHeight / 2)) + ') rotate(-90)');
+	        .attr('transform', 'translate(' + (margin.left / 5) + ', ' + (margin.top + (chartHeight / 2)) + ') rotate(-90)');
 	    var r = d3.scaleLinear()
-	        .domain(d3.extent(data.data, function (d) { return d.individuals; }))
+	        .domain(d3.extent(data.data, function (d) { return d.minutes; }))
 	        .range([5, 25]);
 	    // Now add our data
 	    var update = d3.select('.chart')
@@ -99,18 +130,24 @@
 	        .append('g')
 	        .attr('class', 'data-point')
 	        .append('circle')
-	        .attr('cx', function (d) { return margin.left + x(new Date(d.year, 0)); })
-	        .attr('cy', function (d) { return margin.top + y(d.averageMinutes); })
-	        .attr('r', function (d) { return r(d.individuals); })
+	        .attr('cx', function (d) { return margin.left + x(d.age); })
+	        .attr('cy', function (d) { return margin.top + y(d.avgWeeklyEarnings); })
+	        .attr('r', '5')
 	        .attr('class', function (d) { return d.sex == 'M' ? 'male' : 'female'; })
 	        .on('mouseenter', function (d) {
+	        d3.select(this)
+	            .attr('stroke', 'black')
+	            .attr('stroke-width', '2');
 	        d3.select('.scatterplot-tooltip')
-	            .html("<p>" + d.age + " year old " + (d.sex == "M" ? "males" : "females") + " in " + d.year + "</p><p>Average minutes: " + d.averageMinutes + "</p><p>Individuals: " + d.individuals + "</p>")
+	            .html("<p>In " + d.year + ", " + d.age + " year old " + (d.sex == "M" ? "males" : "females") + " earned an average of $" + d.avgWeeklyEarnings + " per week.</p>")
 	            .style('display', 'block')
 	            .style('left', (d3.event.pageX - 75) + "px")
 	            .style('top', (d3.event.pageY + 20) + "px");
 	    })
 	        .on('mouseout', function (d) {
+	        d3.select(this)
+	            .attr('stroke', null)
+	            .attr('stroke-width', null);
 	        d3.select('.scatterplot-tooltip')
 	            .style('display', 'none');
 	    });
