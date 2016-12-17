@@ -83,8 +83,10 @@
 	        console.log("Error: " + error);
 	    }
 	    // First let's build our scales and axes
-	    var x = d3.scaleLinear()
-	        .domain(d3.extent(data.data, function (d) { return d.age; }))
+	    var minYear = d3.min(data.data, function (d) { return d.year; });
+	    var maxYear = d3.max(data.data, function (d) { return d.year; });
+	    var x = d3.scaleTime()
+	        .domain([new Date(minYear, 0), new Date(maxYear, 0)])
 	        .range([0, chartWidth]);
 	    var xAxis = d3.axisBottom(x);
 	    d3.select('.chart')
@@ -96,7 +98,7 @@
 	        .append('g')
 	        .classed('axis', true)
 	        .append('text')
-	        .text('Age')
+	        .text('Year')
 	        .attr('fill', '#000')
 	        .attr('text-anchor', 'middle')
 	        .attr('transform', 'translate(' + (margin.left + (chartWidth / 2)) + ', ' + (margin.top + chartHeight + margin.bottom - 20) + ')');
@@ -120,7 +122,7 @@
 	        .attr('text-anchor', 'middle')
 	        .attr('transform', 'translate(' + (margin.left / 5) + ', ' + (margin.top + (chartHeight / 2)) + ') rotate(-90)');
 	    var r = d3.scaleLinear()
-	        .domain(d3.extent(data.data, function (d) { return d.minutes; }))
+	        .domain(d3.extent(data.data, function (d) { return d.age; }))
 	        .range([5, 25]);
 	    // Now add our data
 	    var update = d3.select('.chart')
@@ -130,9 +132,9 @@
 	        .append('g')
 	        .attr('class', 'data-point')
 	        .append('circle')
-	        .attr('cx', function (d) { return margin.left + x(d.age); })
+	        .attr('cx', function (d) { return margin.left + x(new Date(d.year, 0)); })
 	        .attr('cy', function (d) { return margin.top + y(d.avgWeeklyEarnings); })
-	        .attr('r', '5')
+	        .attr('r', function (d) { return r(d.age); })
 	        .attr('class', function (d) { return d.sex == 'M' ? 'male' : 'female'; })
 	        .on('mouseenter', function (d) {
 	        d3.select(this)

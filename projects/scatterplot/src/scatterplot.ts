@@ -50,8 +50,10 @@ d3.json('https://dl.dropboxusercontent.com/u/13022985/timeuse4.json', function (
     }
 
     // First let's build our scales and axes
-    let x = d3.scaleLinear()
-        .domain(d3.extent(data.data, (d: any) => d.age))
+    let minYear = d3.min(data.data, (d: any) => d.year);
+    let maxYear = d3.max(data.data, (d: any) => d.year);
+    let x = d3.scaleTime()
+        .domain([new Date(minYear, 0), new Date(maxYear, 0)])
         .range([0, chartWidth]);
     let xAxis = d3.axisBottom(x);
     d3.select('.chart')
@@ -63,7 +65,7 @@ d3.json('https://dl.dropboxusercontent.com/u/13022985/timeuse4.json', function (
         .append('g')
         .classed('axis', true)
         .append('text')
-        .text('Age')
+        .text('Year')
         .attr('fill', '#000')
         .attr('text-anchor', 'middle')
         .attr('transform', 'translate(' + (margin.left + (chartWidth / 2)) + ', ' + (margin.top + chartHeight + margin.bottom - 20) + ')');
@@ -90,7 +92,7 @@ d3.json('https://dl.dropboxusercontent.com/u/13022985/timeuse4.json', function (
         .attr('transform', 'translate(' + (margin.left / 5) + ', ' + (margin.top + (chartHeight / 2)) + ') rotate(-90)');
 
     let r = d3.scaleLinear()
-        .domain(d3.extent(data.data, (d: any) => d.minutes))
+        .domain(d3.extent(data.data, (d: any) => d.age))
         .range([5, 25]);
 
     // Now add our data
@@ -102,9 +104,9 @@ d3.json('https://dl.dropboxusercontent.com/u/13022985/timeuse4.json', function (
         .append('g')
         .attr('class', 'data-point')
         .append('circle')
-        .attr('cx', (d: any) => margin.left + x(d.age))
+        .attr('cx', (d: any) => margin.left + x(new Date(d.year, 0)))
         .attr('cy', (d: any) => margin.top + y(d.avgWeeklyEarnings))
-        .attr('r', '5')
+        .attr('r', (d: any) => r(d.age))
         .attr('class', (d: any) => d.sex == 'M' ? 'male' : 'female')
         .on('mouseenter', function (d: any) {
             d3.select(this)
