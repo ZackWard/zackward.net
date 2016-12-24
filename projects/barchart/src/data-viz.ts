@@ -119,7 +119,7 @@ tooltip.append('p').attr('id', 'tooltip-gdp');
     
 
 
-d3.json('https://dl.dropboxusercontent.com/u/13022985/barchart-data.json', (err: any, data: any) => {
+d3.json('https://assets.zackward.net/barchart-data.json', (err: any, data: any) => {
     if (err !== null) {
         console.log("Error");
     }

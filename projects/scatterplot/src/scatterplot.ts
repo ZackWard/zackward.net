@@ -44,7 +44,7 @@ legend.append('text')
         
 
 
-d3.json('https://dl.dropboxusercontent.com/u/13022985/timeuse4.json', function (error: any, data: any) {
+d3.json('https://assets.zackward.net/timeuse4.json', function (error: any, data: any) {
     if (error !== null) {
         console.log("Error: " + error);
     }

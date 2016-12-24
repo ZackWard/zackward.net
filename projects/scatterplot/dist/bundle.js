@@ -78,7 +78,7 @@
 	legend.append('text')
 	    .text('Male Respondents')
 	    .attr('transform', 'translate(' + ((legendWidth / 5) + 10) + ', ' + (((legendHeight / 3) * 2) + 5) + ')');
-	d3.json('https://dl.dropboxusercontent.com/u/13022985/timeuse4.json', function (error, data) {
+	d3.json('https://assets.zackward.net/timeuse4.json', function (error, data) {
 	    if (error !== null) {
 	        console.log("Error: " + error);
 	    }

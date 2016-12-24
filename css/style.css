@@ -30,7 +30,7 @@ section {
 }
 
 #home {
-  background: url('https://dl.dropboxusercontent.com/u/13022985/bunnysuit-opt.jpg');
+  background: url('https://assets.zackward.net/bunnysuit-opt.jpg');
   background-attachment: fixed;
   background-size: cover;
   background-position: center top;
@@ -53,7 +53,7 @@ section {
 }
 
 #about {
-  background: url('https://dl.dropboxusercontent.com/u/13022985/halftone.png');
+  background: url('https://assets.zackward.net/halftone.png');
 }
 
 #about li {
@@ -71,7 +71,7 @@ section {
 }
 
 #portfolio {
-  background: url('https://dl.dropboxusercontent.com/u/13022985/laptop-on-table.jpg');
+  background: url('https://assets.zackward.net/laptop-on-table.jpg');
   background-attachment: fixed;
   background-size: cover;
   background-position: center top;

@@ -2,8 +2,8 @@ var PomodoroTimer = (function () {
     function PomodoroTimer(options) {
         // Set up sound
         this.audioPlayer = options.sound;
-        this.audioPlayer.registerSound("https://dl.dropboxusercontent.com/u/13022985/Gentle%20Roll.mp3", "ding");
-        this.audioPlayer.registerSound("https://dl.dropboxusercontent.com/u/13022985/Hope.mp3", "ding2");
+        this.audioPlayer.registerSound("https://assets.zackward.net/Gentle%20Roll.mp3", "ding");
+        this.audioPlayer.registerSound("https://assets.zackward.net/Hope.mp3", "ding2");
         // Bind to a clock display element
         this.clock = options.clock;
         // Bind to a progress display element
@@ -105,12 +105,12 @@ var PomodoroTimer = (function () {
         for (var i = 1; i <= this.settings.pomodoros; i++) {
             if (finished > 0) {
                 // Add the finished icon, and subtract 1 from finished
-                displayOutput = displayOutput + '<img src="https://dl.dropboxusercontent.com/u/13022985/pomodoro-finished.png">';
+                displayOutput = displayOutput + '<img src="https://assets.zackward.net/pomodoro-finished.png">';
                 finished--;
             }
             else {
                 // Add the pomodoro icon
-                displayOutput = displayOutput + '<img src="https://dl.dropboxusercontent.com/u/13022985/pomodoro.png">';
+                displayOutput = displayOutput + '<img src="https://assets.zackward.net/pomodoro.png">';
             }
         }
         displayOutput = displayOutput + "<p>You've completed " + this.pomodoros + " of " + this.settings.pomodoros + " Pomodoros!</p>";

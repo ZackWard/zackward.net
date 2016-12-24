@@ -142,7 +142,7 @@
 	    .attr('id', 'tooltip');
 	tooltip.append('p').attr('id', 'tooltip-qtr');
 	tooltip.append('p').attr('id', 'tooltip-gdp');
-	d3.json('https://dl.dropboxusercontent.com/u/13022985/barchart-data.json', function (err, data) {
+	d3.json('https://assets.zackward.net/barchart-data.json', function (err, data) {
 	    if (err !== null) {
 	        console.log("Error");
 	    }

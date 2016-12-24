@@ -35,7 +35,7 @@ $(document).ready(function() {
   });
 
   // Get our quotes via json file on dropbox
-  $.getJSON('https://dl.dropboxusercontent.com/u/13022985/ron-swanson-quotes.json', function(json) {
+  $.getJSON('https://assets.zackward.net/ron-swanson-quotes.json', function(json) {
     quotes = json.quotes;
     // Ok, we have our quotes, let's enable our button
     // and set our first quote
