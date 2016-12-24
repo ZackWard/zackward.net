@@ -1,0 +1,13 @@
+.chart {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.heatmap-tooltip {
+    position: absolute;
+    color: white;
+    display: none;
+    border-radius: 5px;
+    background: dimgray;
+}
