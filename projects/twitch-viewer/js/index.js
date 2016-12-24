@@ -1,7 +1,7 @@
 var endpoint = "https://api.twitch.tv/kraken";
 var apiData = {
   api_version: "3",
-  client_id: "FCC_zw_678123567675434",
+  client_id: "uvxppdwqo8gw9riygsplcw55eonjb6"
 };
 
 var checkProgress = function(collection, streamer) {
@@ -20,10 +20,23 @@ var getChannelInfo = function(collection, streamer) {
   $.ajax({
     url: endpoint + "/channels/" + streamer.name,
     data: apiData,
+    headers: {
+      'Client-ID': apiData.client_id
+    },
     dataType: "jsonp",
     success: function(result) {
+      console.log(streamer.name);
+      console.log(result);
+
+      // First, check to make sure that this streamer exists
+      if (result.status == 404) {
+        streamer.username = streamer.name;
+        streamer.exists = false;
+      } else {
+        streamer.username = result.display_name;
+      }
+
       // Attach results to streamer here
-      streamer.username = result.display_name;
       streamer.url = "//www.twitch.tv/" + streamer.username;
       streamer.views = result.views;
       streamer.followers = result.followers;
@@ -51,13 +64,11 @@ var getStreamInfo = function(collection, streamer) {
   $.ajax({
     url: endpoint + "/streams/" + streamer.name,
     data: apiData,
+    headers: {
+      'Client-ID': apiData.client_id
+    },
     dataType: "jsonp",
     success: function(result) {
-      // First, check to make sure that this streamer exists
-      if (result.status == 422) {
-        streamer.username = streamer.name;
-        streamer.exists = false;
-      }
 
       if (result.stream == null) {
         // The streamer is offline, set values accordingly
@@ -155,7 +166,7 @@ var getTwitchData = function(collection) {
 $(document).ready(function() {
   // For now we will attach our API call to a button so that we don't repeatedly call api on reload
   var streamerCollection = {
-    names: ["Circon", "RukhSolette", "freecodecamp", "storbeck", "terakilobyte", "habathcx", "RobotCaleb", "thomasballinger", "noobs2ninjas", "beohoff", "brunofin", "comster404"],
+    names: ["de_1uxe", "Circon", "RukhSolette", "freecodecamp", "storbeck", "terakilobyte", "habathcx", "RobotCaleb", "thomasballinger", "noobs2ninjas", "beohoff", "brunofin", "comster404"],
     streamers: []
   };
   getTwitchData(streamerCollection);
