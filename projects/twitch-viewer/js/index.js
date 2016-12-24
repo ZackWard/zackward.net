@@ -25,8 +25,6 @@ var getChannelInfo = function(collection, streamer) {
     },
     dataType: "jsonp",
     success: function(result) {
-      console.log(streamer.name);
-      console.log(result);
 
       // First, check to make sure that this streamer exists
       if (result.status == 404) {
@@ -166,7 +164,7 @@ var getTwitchData = function(collection) {
 $(document).ready(function() {
   // For now we will attach our API call to a button so that we don't repeatedly call api on reload
   var streamerCollection = {
-    names: ["de_1uxe", "Circon", "RukhSolette", "freecodecamp", "storbeck", "terakilobyte", "habathcx", "RobotCaleb", "thomasballinger", "noobs2ninjas", "beohoff", "brunofin", "comster404"],
+    names: ["Circon", "RukhSolette", "freecodecamp", "storbeck", "terakilobyte", "habathcx", "RobotCaleb", "thomasballinger", "noobs2ninjas", "beohoff", "brunofin", "comster404"],
     streamers: []
   };
   getTwitchData(streamerCollection);
