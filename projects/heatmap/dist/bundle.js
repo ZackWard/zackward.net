@@ -62,7 +62,7 @@
 	d3.select('.heatmap-tooltip')
 	    .style('width', tooltipWidth + 'px')
 	    .style('height', tooltipHeight + 'px');
-	d3.json('http://s3.zackward.net/global-temperature.json', function (error, data) {
+	d3.json('https://assets.zackward.net/global-temperature.json', function (error, data) {
 	    console.log(data);
 	    // Create X Axis
 	    var minYear = d3.min(data.monthlyVariance, function (d) { return d.year; });

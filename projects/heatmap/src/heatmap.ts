@@ -22,7 +22,7 @@ d3.select('.heatmap-tooltip')
     .style('width', tooltipWidth + 'px')
     .style('height', tooltipHeight + 'px');
 
-d3.json('http://s3.zackward.net/global-temperature.json', (error: any, data: any) => {
+d3.json('https://assets.zackward.net/global-temperature.json', (error: any, data: any) => {
     console.log(data);
 
     // Create X Axis
