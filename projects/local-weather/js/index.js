@@ -1,4 +1,4 @@
-var apiUrl = 'http://api.openweathermap.org/data/2.5/weather?';
+var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?';
 var apiKey = '72680b4fd147f5f91328a7e8b3d80b36';
 var myData = {};
 
@@ -56,7 +56,7 @@ var updateWeather = function() {
 };
 
 $(document).ready(function() {
-  $.getJSON('http://ip-api.com/json', function(geo) {
+  $.getJSON('https://ip-api.com/json', function(geo) {
     getWeatherData(geo.lat, geo.lon);
   });
 });
