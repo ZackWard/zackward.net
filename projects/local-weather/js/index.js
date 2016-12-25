@@ -1,28 +1,4 @@
-var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?';
-var apiKey = '72680b4fd147f5f91328a7e8b3d80b36';
 var myData = {};
-
-var getWeatherData = function(lat, lon) {
-  var myUrl = apiUrl + "lat=" + lat + "&lon=" + lon + "&APPID=" + apiKey;
-  $.getJSON(myUrl, function(json) {
-    // Process the json weather data
-    myData.weatherID = json.weather[0].id;
-    myData.weatherDesc = json.weather[0].main;
-    myData.tempK = json.main.temp;
-    myData.tempC = Math.floor(myData.tempK - 273.15);
-    myData.tempF = Math.floor((myData.tempK * (9 / 5)) - 459.67);
-    myData.city = json.name;
-    myData.country = json.sys.country;
-    if (json.dt > json.sys.sunrise && json.dt < json.sys.sunset) {
-      myData.dayNight = "day";
-    } else {
-      myData.dayNight = "night";
-    }
-
-    // Update the page
-    updateWeather();
-  });
-};
 
 var setupTempButton = function () {
   // This function is called after document.ready() and json is received.
@@ -50,13 +26,22 @@ var updateWeather = function() {
   
   // Update DOM
   $('#pageTitle').html('Local Weather for ' + myData.city + ", " + myData.country);
-  $('#weather-icon').addClass('wi-owm-' + myData.dayNight + "-" + myData.weatherID);
+  $('#weather-icon').html("<img src=\"" + myData.weatherIcon + "\"></img>");
   $('#description').html(myData.weatherDesc);
   $('#temperature').html(myData.tempF + " &deg;F");
 };
 
 $(document).ready(function() {
-  $.getJSON('https://ip-api.com/json', function(geo) {
-    getWeatherData(geo.lat, geo.lon);
+  $.getJSON('https://api.wunderground.com/api/d036878575ebc85f/geolookup/conditions/q/autoip.json', function(json) {
+    myData.weatherDesc = json.current_observation.weather;
+    myData.weatherIcon = json.current_observation.icon_url;
+    myData.tempC = json.current_observation.temp_c;
+    myData.tempF = json.current_observation.temp_f;
+    myData.tempK = (myData.tempC + 273.15).toFixed(2);
+    myData.city = json.location.city;
+    myData.country = json.location.country;
+
+    // Update the page
+    updateWeather();
   });
 });
