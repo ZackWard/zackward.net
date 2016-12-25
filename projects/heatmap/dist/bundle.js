@@ -63,7 +63,6 @@
 	    .style('width', tooltipWidth + 'px')
 	    .style('height', tooltipHeight + 'px');
 	d3.json('https://assets.zackward.net/global-temperature.json', function (error, data) {
-	    console.log(data);
 	    // Create X Axis
 	    var minYear = d3.min(data.monthlyVariance, function (d) { return d.year; });
 	    var maxYear = d3.max(data.monthlyVariance, function (d) { return d.year; });

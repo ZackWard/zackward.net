@@ -23,7 +23,6 @@ d3.select('.heatmap-tooltip')
     .style('height', tooltipHeight + 'px');
 
 d3.json('https://assets.zackward.net/global-temperature.json', (error: any, data: any) => {
-    console.log(data);
 
     // Create X Axis
     let minYear: number = d3.min(data.monthlyVariance, (d: any) => d.year);
