@@ -4,6 +4,10 @@
     margin-right: auto;
 }
 
+.chart text {
+    font-size: 1.5em;
+}
+
 .heatmap-tooltip {
     position: absolute;
     color: white;

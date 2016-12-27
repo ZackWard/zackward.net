@@ -47,12 +47,12 @@
 	// Set up chart sizes here
 	var margin = {
 	    top: 20,
-	    bottom: 75,
-	    left: 75,
-	    right: 75
+	    bottom: 100,
+	    left: 100,
+	    right: 100
 	};
-	var width = 1600 - margin.left - margin.right;
-	var height = 800 - margin.top - margin.bottom;
+	var width = 1300 - margin.left - margin.right;
+	var height = 600 - margin.top - margin.bottom;
 	var tooltipWidth = 150;
 	var tooltipHeight = 75;
 	// Set up anything that we can without data here
@@ -76,6 +76,13 @@
 	        .append('g')
 	        .attr('transform', 'translate(' + margin.left + ', ' + (margin.top + height) + ')')
 	        .call(xAxis);
+	    // Create X Axis Label
+	    var xAxisLabel = d3.select('.chart')
+	        .append('g')
+	        .attr('id', 'x-axis-label')
+	        .attr('transform', 'translate(' + (margin.left / 3) + ', ' + (margin.top + (height / 2)) + ') rotate(-90)')
+	        .append('text')
+	        .text('Month');
 	    // Create Y Axis
 	    var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 	    var y = d3.scaleBand()
@@ -86,11 +93,61 @@
 	        .append('g')
 	        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
 	        .call(yAxis);
+	    // Create Y Axis Label
+	    var yAxisLabel = d3.select('.chart')
+	        .append('g')
+	        .attr('id', 'y-axis-label')
+	        .attr('transform', 'translate(' + (margin.left + (width / 2)) + ', ' + (margin.top + height + (2 * (margin.bottom / 3))) + ')')
+	        .append('text')
+	        .text('Year');
 	    // Create color scale
 	    var maxVariance = d3.max(data.monthlyVariance, function (d) { return d.variance; });
 	    var minVariance = d3.min(data.monthlyVariance, function (d) { return d.variance; });
 	    var colorScale = d3.scaleSequential(d3.interpolateSpectral)
 	        .domain([maxVariance, minVariance]);
+	    // Create color legend
+	    var legendMargin = {
+	        left: 40,
+	        right: 10,
+	        top: 10,
+	        bottom: 10
+	    };
+	    var legendWidth = 75 - legendMargin.left - legendMargin.right;
+	    var legendHeight = height - legendMargin.top - legendMargin.bottom;
+	    var legend = d3.select('.chart')
+	        .append('g')
+	        .attr('transform', 'translate(' + (margin.left + width + legendMargin.left) + ', ' + (margin.top + legendMargin.top) + ')');
+	    legend.append('text')
+	        .text('Temperature Variance')
+	        .attr('text-anchor', 'middle')
+	        .attr('transform', 'translate(' + (-10) + ', ' + (legendHeight / 2) + ') rotate(-90)');
+	    var defs = d3.select('.chart').append('defs');
+	    var gradient = defs.append('linearGradient')
+	        .attr('id', 'my-linear-gradient')
+	        .attr('x1', '0%')
+	        .attr('y1', '0%')
+	        .attr('x2', '0%')
+	        .attr('y2', '100%');
+	    for (var i = 0; i < 1; i += .05) {
+	        gradient.append('stop')
+	            .attr('offset', (i * 100) + "%")
+	            .attr('stop-color', d3.interpolateSpectral(i));
+	    }
+	    gradient.append('stop')
+	        .attr('offset', '100%')
+	        .attr('stop-color', d3.interpolateSpectral(1));
+	    // Test
+	    var legendRect = legend.append('rect')
+	        .attr('width', legendWidth)
+	        .attr('height', legendHeight)
+	        .attr('fill', 'url(#my-linear-gradient)');
+	    var legendScale = d3.scaleLinear()
+	        .domain([minVariance, maxVariance])
+	        .range([legendHeight, 0]);
+	    var colorAxis = d3.axisRight(legendScale).ticks(8);
+	    legend.append('g')
+	        .attr('transform', 'translate(' + legendWidth + ', 0)')
+	        .call(colorAxis);
 	    // Join data
 	    var update = d3.select('.chart').selectAll('.data-point').data(data.monthlyVariance);
 	    // Handle new data elements
