@@ -41,7 +41,6 @@ function updateTooltip(x: number, y: number) {
 }
 
 d3.json('https://assets.zackward.net/countries.json', function (error: any, data: any) {
-    console.log(data);
 
     // Attach nodes and links to our simulation
     simulation.nodes(data.nodes);
