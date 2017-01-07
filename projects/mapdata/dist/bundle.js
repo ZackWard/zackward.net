@@ -48,8 +48,18 @@
 	var es6_promise_1 = __webpack_require__(1);
 	var width = 960;
 	var height = 500;
-	var context = d3.select("canvas").node().getContext("2d"), projection = d3.geoOrthographic(), path = d3.geoPath(projection, context), graticule = d3.geoGraticule(), world, features;
+	var defaultRadius = 0.75;
+	var zoomFactor = 1;
+	var dragFactor = 4;
+	var context = d3.select("canvas").node().getContext("2d"), projection = d3.geoOrthographic(), path = d3.geoPath(projection, context).pointRadius(defaultRadius), graticule = d3.geoGraticule(), world, features, dragStartCoords, // This will hold the x,y mouse coords when we start a drag action
+	dragStartRotation, // This will hold the current projection rotation when we start a drag action
+	visibleNodes, // This array will hold all of the currently visible meteorites
+	highlightedNode = null, // This is the meteorite element that the mouse is currently over
+	r; // D3 Linear Scale for our point Radius
 	var originalScale = projection.scale();
+	// Set up detached container for non-displayed DOM elements
+	var detachedContainer = document.createElement("custom");
+	var dataContainer = d3.select(detachedContainer);
 	// Set up promises here
 	function getGeography() {
 	    return new es6_promise_1.Promise(function (resolve, reject) {
@@ -69,51 +79,190 @@
 	        });
 	    });
 	}
-	function redrawMap() {
-	    context.clearRect(0, 0, width, height);
-	    context.strokeStyle = "#000";
-	    context.beginPath();
-	    path(topojson.mesh(world, world.objects.land));
-	    context.stroke();
-	    context.strokeStyle = "#FF0000";
-	    context.beginPath();
-	    path(features);
-	    context.stroke();
+	function getVisibleMeteorites() {
+	    visibleNodes = [];
+	    var meteorites = dataContainer.selectAll('custom.data-point');
+	    meteorites.each(function (d) {
+	        var meteorite = d3.select(this);
+	        var point = {
+	            type: "Point",
+	            coordinates: [meteorite.attr('data-lon'), meteorite.attr('data-lat')]
+	        };
+	        var bounds = path.bounds(point);
+	        var canvasR = parseFloat(meteorite.attr('data-mass-radius')) * zoomFactor;
+	        var canvasX = bounds[0][0];
+	        var canvasY = bounds[0][1];
+	        meteorite.attr('data-canvas-x', canvasX);
+	        meteorite.attr('data-canvas-y', canvasY);
+	        meteorite.attr('data-canvas-r', canvasR);
+	        // Add to the visibleNodes array if this meteorite is in the display area
+	        if (canvasX >= 0 && canvasX <= width && canvasY >= 0 && canvasY <= height) {
+	            visibleNodes.push(meteorite);
+	        }
+	    });
+	}
+	function drawGraticule() {
 	    context.strokeStyle = "#e1e1e1";
 	    context.beginPath();
 	    path(graticule());
 	    context.stroke();
 	}
+	function drawGeography() {
+	    context.fillStyle = "#ccc";
+	    context.beginPath();
+	    path(topojson.feature(world, world.objects.land));
+	    context.fill();
+	}
+	function drawMeteorites() {
+	    context.strokeStyle = "#FF0000";
+	    // We only need to draw visible meteorites
+	    visibleNodes.forEach(function (meteorite) {
+	        var lon = meteorite.attr('data-lon');
+	        var lat = meteorite.attr('data-lat');
+	        var radius = meteorite.attr('data-mass-radius');
+	        path.pointRadius(radius * zoomFactor);
+	        context.beginPath();
+	        path({
+	            type: "Point",
+	            coordinates: [lon, lat]
+	        });
+	        context.stroke();
+	    });
+	    // If highlightedNode is defined, the mouse is over a meteorite. Let's focus 
+	    // on it somehow
+	    if (highlightedNode == null) {
+	        return;
+	    }
+	    context.strokeStyle = "#000";
+	    context.fillStyle = "rgba(255, 0, 0, 0.25)";
+	    path.pointRadius(highlightedNode.attr('data-mass-radius') * zoomFactor);
+	    context.beginPath();
+	    path({
+	        type: "Point",
+	        coordinates: [highlightedNode.attr('data-lon'), highlightedNode.attr('data-lat')]
+	    });
+	    context.stroke();
+	    context.fill();
+	}
+	function updateTooltip(hide) {
+	    if (hide === void 0) { hide = false; }
+	    if (highlightedNode == null || hide) {
+	        d3.select('.mapdata-tooltip')
+	            .classed('tooltip-visible', false)
+	            .classed('tooltip-hidden', true);
+	        return;
+	    }
+	    var htmlString = "";
+	    htmlString += '<p>Name: ' + highlightedNode.attr('data-name') + '</p>';
+	    htmlString += '<p>Year: ' + highlightedNode.attr('data-year').split('-')[0];
+	    htmlString += '<p>Mass: ' + d3.format(',')((parseInt(highlightedNode.attr('data-mass')) / 1000)) + ' kg</p>';
+	    htmlString += '<p>Class: ' + highlightedNode.attr('data-class');
+	    d3.select('.mapdata-tooltip')
+	        .classed('tooltip-hidden', false)
+	        .classed('tooltip-visible', true)
+	        .style('left', (d3.event.pageX + 25) + "px")
+	        .style('top', d3.event.pageY + "px")
+	        .html(htmlString);
+	}
+	function redrawMap() {
+	    context.clearRect(0, 0, width, height);
+	    // First draw the graticule (grid lines)
+	    drawGraticule();
+	    // Second, draw the geography of the globe
+	    drawGeography();
+	    // Finally, draw the meteorite strike data
+	    drawMeteorites();
+	}
+	function moveMouse() {
+	    var relativeCoords = d3.mouse(this);
+	    // Check to see if the mouse is over any of the meteorite circles
+	    var highlightedNodes = [];
+	    visibleNodes.forEach(function (node) {
+	        var cx = parseInt(node.attr('data-canvas-x'));
+	        var cy = parseInt(node.attr('data-canvas-y'));
+	        var r = parseFloat(node.attr('data-canvas-r'));
+	        var x = relativeCoords[0];
+	        var y = relativeCoords[1];
+	        if (Math.pow((x - cx), 2) + Math.pow((y - cy), 2) < Math.pow(r, 2)) {
+	            highlightedNodes.push(node);
+	        }
+	    });
+	    // We may have more than one highlighted node (in the case of a large and a small circle)
+	    // Generally, we want to highlight the smallest one
+	    if (highlightedNodes.length > 1) {
+	        var smallestNode_1 = null;
+	        highlightedNodes.forEach(function (node) {
+	            if (smallestNode_1 == null || parseInt(node.attr('data-mass')) < parseInt(smallestNode_1.attr('data-mass'))) {
+	                smallestNode_1 = node;
+	            }
+	        });
+	        highlightedNode = smallestNode_1;
+	        updateTooltip();
+	    }
+	    else if (highlightedNodes.length == 1) {
+	        highlightedNode = highlightedNodes[0];
+	        updateTooltip();
+	    }
+	    else if (highlightedNodes.length == 0) {
+	        highlightedNode = null;
+	        updateTooltip();
+	    }
+	    redrawMap();
+	}
 	function zoomed() {
-	    console.log(d3.event.transform.k);
+	    zoomFactor = d3.event.transform.k;
 	    projection.scale(originalScale * d3.event.transform.k);
+	    updateTooltip(true);
+	    getVisibleMeteorites();
+	    redrawMap();
+	}
+	function startDragging() {
+	    dragStartCoords = [d3.event.sourceEvent.pageX, d3.event.sourceEvent.pageY];
+	    var rot = projection.rotate();
+	    dragStartRotation = [-rot[0], rot[1]];
+	    updateTooltip(true); // Hide the tooltip when we start dragging
+	}
+	function doDrag() {
+	    var dragCoords = [d3.event.sourceEvent.pageX, d3.event.sourceEvent.pageY];
+	    var rotation = [dragStartRotation[0] + (dragStartCoords[0] - dragCoords[0]) / (dragFactor * zoomFactor), dragStartRotation[1] + (dragStartCoords[1] - dragCoords[1]) / (dragFactor * zoomFactor)];
+	    projection.rotate([-rotation[0], rotation[1]]);
+	    getVisibleMeteorites();
+	    redrawMap();
+	}
+	function buildMap() {
+	    // Set up a scale for the radius of our meteorite strike symbols here
+	    var massExtent = d3.extent(features.features, function (d) { return parseInt(d.properties.mass); });
+	    r = d3.scalePow()
+	        .exponent(0.5)
+	        .domain(massExtent)
+	        .range([defaultRadius, defaultRadius * 50]);
+	    // Set up data binding here
+	    dataContainer.selectAll('custom.data-point')
+	        .data(features.features, function (d) { return d.properties.id; })
+	        .enter()
+	        .append('custom')
+	        .classed('data-point', true)
+	        .attr('data-lon', function (d) { return d.geometry == null ? "null" : d.geometry.coordinates[0]; })
+	        .attr('data-lat', function (d) { return d.geometry == null ? "null" : d.geometry.coordinates[1]; })
+	        .attr('data-mass', function (d) { return d.properties.mass; })
+	        .attr('data-mass-radius', function (d) { return r(parseInt(d.properties.mass)); })
+	        .attr('data-class', function (d) { return d.properties.recclass; })
+	        .attr('data-year', function (d) { return d.properties.year; })
+	        .attr('data-name', function (d) { return d.properties.name; });
+	    // Set up dragging behaviour here. 
+	    d3.selectAll('canvas').call(d3.drag().on('start', startDragging).on('drag', doDrag));
+	    // Set up mouseover behaviour here
+	    d3.select('canvas').on('mousemove', moveMouse);
+	    // Set up zooming here
+	    d3.selectAll('canvas').call(d3.zoom().scaleExtent([0.5, 20]).on('zoom', zoomed));
+	    // Do the initial map drawing
+	    getVisibleMeteorites();
 	    redrawMap();
 	}
 	es6_promise_1.Promise.all([getGeography(), getFeatures()]).then(function (datum) {
 	    world = datum[0];
 	    features = datum[1];
-	    console.log(features);
-	    var dragStartCoords;
-	    var dragStartRotation;
-	    // Set up dragging behaviour here. 
-	    var drag = d3.drag()
-	        .on('start', function () {
-	        dragStartCoords = [d3.event.sourceEvent.pageX, d3.event.sourceEvent.pageY];
-	        var rot = projection.rotate();
-	        dragStartRotation = [-rot[0], rot[1]];
-	    })
-	        .on('drag', function () {
-	        if (dragStartCoords) {
-	            var dragCoords = [d3.event.sourceEvent.pageX, d3.event.sourceEvent.pageY];
-	            var rotation = [dragStartRotation[0] + (dragStartCoords[0] - dragCoords[0]) / 4, dragStartRotation[1] + (dragStartCoords[1] - dragCoords[1]) / 4];
-	            projection.rotate([-rotation[0], rotation[1]]);
-	        }
-	        redrawMap();
-	    });
-	    d3.selectAll('canvas').call(drag);
-	    // Set up zooming here
-	    d3.selectAll('canvas').call(d3.zoom().on('zoom', zoomed));
-	    redrawMap();
+	    buildMap();
 	});
 
 
