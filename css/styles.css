@@ -1,0 +1,39 @@
+body {
+    background-color: #fcfcfc;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+h1,h2,h3,h4,h5,h6,h7 {
+    font-family: 'Libre Baskerville', serif;
+}
+
+#intro {
+    height: 65vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#intro h1,#intro h2 {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+@media (min-width: 1024px) {
+    #intro {
+        height: 100vh;
+    }
+}
+
+#splash {
+    min-height: 35vh;
+    background-image: url("../img/splash-image.jpg");
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: contain;
+}
+
+#hello {
+    display: block;
+    text-align: center;
+    width: 100%;
+}

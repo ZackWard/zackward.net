@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: zackward-dot-net
+  name: zackward-dot-net
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zackward-dot-net
+  template:
+    metadata:
+      labels:
+        app: zackward-dot-net
+    spec:
+      containers:
+        - image: zackward/zackward.net:1.1
+          name: zackward-dot-net
+          ports:
+          - containerPort: 80
