@@ -1,3 +1,4 @@
+.DS_Store
 .vscode/tasks.json
 tsconfig.json
 projects/markdown-previewer/node_modules/*

@@ -1,0 +1,5 @@
+{{ $style := resources.Get "css/styles.css" | minify }}
+
+{{ with $style }}
+<style>{{ .Content | safeCSS }}</style>
+{{ end }}
